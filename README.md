@@ -1,2 +1,2 @@
-# dml
+# DML
 Distributed Machine Learning framework
