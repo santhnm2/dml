@@ -2,7 +2,13 @@
 #define GRAPH_GRAPH_H
 
 #include <set>
+#include <string>
 #include <vector>
+#include <Eigen/Dense>
+
+#include "../ops/operation.h"
+
+using Eigen::MatrixXd;
 
 class Node;
 class Edge;
@@ -15,10 +21,15 @@ class Node {
     Edge* AddEdge(bool input, Edge* edge);
   private:
     friend class Graph;
-    Node(int id, int op_type);
+    //Node(int id, int op_type);
+    Node (int id, std::string op);
     ~Node();
     int id_;
-    int op_type_;
+    //int op_type_;
+    MatrixXd input_;
+    MatrixXd computation_data_;
+    MatrixXd output_;
+    Operation* op_;
 
     std::vector<Edge*> in_edges_;
     std::vector<Edge*> out_edges_;

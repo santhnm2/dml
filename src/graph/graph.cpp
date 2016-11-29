@@ -1,11 +1,12 @@
 #include "graph.h"
 
 #include <set>
+#include <string>
 #include <vector>
 
-Node::Node(int id, int op_type) {
+Node::Node(int id, std::string op) {
   id_ = id;
-  op_type_ = op_type;
+  //TODO: convert string op to Operation object
 }
 
 Node::~Node() {
