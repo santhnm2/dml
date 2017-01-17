@@ -1,0 +1,19 @@
+syntax = "proto3";
+
+package dml;
+
+service Worker {
+  rpc InitNode (InitNodeRequest) returns (InitNodeResponse) {}
+}
+
+message InitNodeRequest {
+  string name = 1;
+  
+  string op = 2;
+
+  string input = 3;
+}
+
+message InitNodeResponse {
+  string message = 1;
+}

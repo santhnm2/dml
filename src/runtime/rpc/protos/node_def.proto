@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package dml;
+
+message NodeDef {
+  string name = 1;
+  
+  string op = 2;
+
+  string input = 3;
+}
