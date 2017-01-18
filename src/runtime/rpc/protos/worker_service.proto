@@ -2,16 +2,14 @@ syntax = "proto3";
 
 package dml;
 
+import "node_def.proto";
+
 service Worker {
   rpc InitNode (InitNodeRequest) returns (InitNodeResponse) {}
 }
 
 message InitNodeRequest {
-  string name = 1;
-  
-  string op = 2;
-
-  string input = 3;
+  NodeDef def = 1;
 }
 
 message InitNodeResponse {

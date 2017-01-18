@@ -5,6 +5,7 @@
 
 #include <grpc++/grpc++.h>
 
+#include "node_def.pb.h"
 #include "worker_service.grpc.pb.h"
 
 using grpc::Server;
@@ -15,7 +16,7 @@ using grpc::ServerCompletionQueue;
 using grpc::Status;
 using dml::InitNodeRequest;
 using dml::InitNodeResponse;
-// using worker_service::NodeDef;
+using dml::NodeDef;
 using dml::Worker;
 
 class WorkerService final {
@@ -78,8 +79,11 @@ class WorkerService final {
         // part of its FINISH state.
         new CallData(service_, cq_);
 
-        std::cout << "Initializing node " << request_.name() << " with op " <<
-        request_.op() << " and input " << request_.input() << std::endl;
+        NodeDef def = request_.def();
+
+        std::cout << "Initializing node " << def.name() << " with op " <<
+        def.op() << " and input " << def.input() << std::endl;
+        
         // The actual processing.
         // std::string prefix("success ");
         response_.set_message("success");

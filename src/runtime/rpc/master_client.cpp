@@ -4,6 +4,7 @@
 
 #include <grpc++/grpc++.h>
 
+#include "node_def.pb.h"
 #include "worker_service.grpc.pb.h"
 
 using grpc::Channel;
@@ -13,6 +14,7 @@ using grpc::CompletionQueue;
 using grpc::Status;
 using dml::InitNodeRequest;
 using dml::InitNodeResponse;
+using dml::NodeDef;
 using dml::Worker;
 
 class MasterClient {
@@ -26,9 +28,11 @@ class MasterClient {
                        const std::string& input) {
     // Data we are sending to the server.
     InitNodeRequest request;
-    request.set_name(name);
-    request.set_op(op);
-    request.set_input(input);
+    NodeDef* def = new NodeDef();
+    def->set_name(name);
+    def->set_op(op);
+    def->set_input(input);
+    request.set_allocated_def(def);
 
     // Container for the data we expect from the server.
     InitNodeResponse response;
@@ -97,8 +101,3 @@ int main(int argc, char** argv) {
 
   return 0;
 }
-
-
-
-
-
