@@ -4,6 +4,7 @@
 
 #include <grpc++/grpc++.h>
 
+#include "../../graph/node.h"
 #include "node_def.pb.h"
 #include "worker_service.grpc.pb.h"
 
@@ -31,7 +32,7 @@ class MasterClient {
     NodeDef* def = new NodeDef();
     def->set_name(name);
     def->set_op(op);
-    def->set_input(input);
+    def->set_inputs(input);
     request.set_allocated_def(def);
 
     // Container for the data we expect from the server.
@@ -101,3 +102,11 @@ int main(int argc, char** argv) {
 
   return 0;
 }
+
+/*
+  1) Read in devices
+  2) Read in graph and create nodes
+  3) Schedule (place) nodes
+  4) Distribute nodes to devices
+  5) Start computation
+*/

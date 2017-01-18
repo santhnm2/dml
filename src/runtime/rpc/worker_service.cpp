@@ -5,6 +5,7 @@
 
 #include <grpc++/grpc++.h>
 
+#include "../../graph/node.h"
 #include "node_def.pb.h"
 #include "worker_service.grpc.pb.h"
 
@@ -82,7 +83,9 @@ class WorkerService final {
         NodeDef def = request_.def();
 
         std::cout << "Initializing node " << def.name() << " with op " <<
-        def.op() << " and input " << def.input() << std::endl;
+        def.op() << " and input " << def.inputs() << std::endl;
+
+        Node node(def);
         
         // The actual processing.
         // std::string prefix("success ");
@@ -153,3 +156,11 @@ int main(int argc, char** argv) {
 
   return 0;
 }
+
+/*
+  1) Read in devices
+  2) Start worker service
+  3) Receive node
+  4) Initialize node
+  5) Wait for computation RPC
+*/

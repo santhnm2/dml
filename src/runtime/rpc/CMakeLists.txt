@@ -30,11 +30,9 @@ add_custom_command(
 # Generated include directory
 include_directories("${CMAKE_CURRENT_BINARY_DIR}")
 
-add_executable(worker_service worker_service.cpp  ${node_def_proto_srcs}
-    ${worker_service_proto_srcs}
-    ${worker_service_grpc_srcs})
+set(sources ${node_def_proto_srcs}  ${worker_service_proto_srcs} ${worker_service_grpc_srcs} "../../graph/node.cpp")
+
+add_executable(worker_service worker_service.cpp  ${sources})
 target_link_libraries(worker_service ${PROTOBUF_LIBRARY} grpc++_unsecure grpc gpr)
-add_executable(master_client master_client.cpp  ${node_def_proto_srcs}
-    ${worker_service_proto_srcs}
-    ${worker_service_grpc_srcs})
+add_executable(master_client master_client.cpp  ${sources})
 target_link_libraries(master_client ${PROTOBUF_LIBRARY} grpc++_unsecure grpc gpr)
