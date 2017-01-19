@@ -87,7 +87,7 @@ class MasterClient {
   std::unique_ptr<Worker::Stub> stub_;
 };
 
-int main(int argc, char** argv) {
+/*int main(int argc, char** argv) {
   // Instantiate the client. It requires a channel, out of which the actual RPCs
   // are created. This channel models a connection to an endpoint (in this case,
   // localhost at port 50051). We indicate that the channel isn't authenticated
@@ -101,7 +101,7 @@ int main(int argc, char** argv) {
   std::cout << "Master received: " << reply << std::endl;
 
   return 0;
-}
+}*/
 
 /*
   1) Read in devices

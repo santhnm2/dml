@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <vector>
 
 #include "device_mgr.h"
 
@@ -22,7 +23,14 @@ void DeviceManager::parseDeviceList(const std::string filename) {
   }
 }
 
-Device DeviceManager::getDeviceAtIndex(int idx) {
-  //TODO(santhnm2): add error handling
+std::vector<Device> DeviceManager::devices() const {
+  return device_list_;
+}
+
+Device DeviceManager::getDeviceAtIndex(int idx) const {
   return device_list_[idx];
+}
+
+int DeviceManager::size() const {
+  return device_list_.size();
 }

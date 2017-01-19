@@ -32,6 +32,17 @@ void GraphManager::parseGraphSpec(const std::string filename) {
   }
 }
 
+int GraphManager::size() {
+  return graph_.size();
+}
+
+Node* GraphManager::getNodeAtIndex(int idx) {
+  if (idx >= graph_.size() || idx < 0) {
+    return NULL;
+  } 
+  return &graph_[idx];
+}
+
 std::vector<Node> GraphManager::graph() {
   return graph_;
 }

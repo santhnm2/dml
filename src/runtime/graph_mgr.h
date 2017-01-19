@@ -10,6 +10,8 @@ class GraphManager {
  public:
   void parseGraphSpec(const std::string filename);
   std::vector<Node> graph();
+  Node* getNodeAtIndex(int idx);
+  int size();
 
  private:
   std::vector<Node> graph_;

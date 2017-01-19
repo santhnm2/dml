@@ -5,6 +5,8 @@
 
 class Device {
  public:
+  Device() {}
+
   Device(const std::string name, const std::string addr, 
          const std::string type) {
     name_ = name;
