@@ -27,7 +27,6 @@ class MasterClient {
       : stub_(Worker::NewStub(channel)) {}
 
   std::string InitNode(std::vector<NodeDef> defs) {
-    // Data we are sending to the server.
     InitNodeRequest request;
 
     // TODO(santhnm2): populate the request with the NodeDefs

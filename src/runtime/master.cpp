@@ -26,7 +26,7 @@ int main(int argc, char* argv[]) {
   std::string device_list_file(argv[1]);
   std::string graph_spec_file(argv[2]);
 
-	DeviceManager device_mgr(device_list_file);
+  DeviceManager device_mgr(device_list_file);
 
   GraphManager graph_mgr(graph_spec_file);
 
