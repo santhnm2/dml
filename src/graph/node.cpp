@@ -5,6 +5,10 @@
 using dml::NodeDef;
 
 Node::Node(NodeDef def) {
+  // TODO(santhnm2): assign Op to Node based on op string
+  // TODO(santhnm2): parse input string
+  // TODO(santhnm2): parse output string
+
   def.name() == "-" ? name_ = "" : name_ = def.name();
 
   def.op() == "-" ? op_ = "" : op_ = def.op();
@@ -14,23 +18,23 @@ Node::Node(NodeDef def) {
   def.outputs() == "-" ? outputs_ = "" : outputs_ = def.outputs();
 }
 
-std::string Node::name() {
+std::string Node::name() const {
   return name_;
 }
 
-std::string Node::op() {
+std::string Node::op() const {
   return op_;
 }
 
-std::string Node::inputs() {
+std::string Node::inputs() const {
   return inputs_;
 }
 
-std::string Node::outputs() {
+std::string Node::outputs() const {
   return outputs_;
 }
 
-Device Node::device() {
+Device Node::device() const {
   return device_;
 }
 

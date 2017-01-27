@@ -9,7 +9,7 @@ service Worker {
 }
 
 message InitNodeRequest {
-  NodeDef def = 1;
+  repeated NodeDef def = 1;
 }
 
 message InitNodeResponse {

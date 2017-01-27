@@ -8,7 +8,7 @@
 
 using dml::NodeDef;
 
-void GraphManager::parseGraphSpec(const std::string filename) {
+GraphManager::GraphManager(const std::string filename) {
   std::ifstream graph_spec(filename.c_str(), std::ifstream::in);
   std::string name;
   std::string op;

@@ -5,7 +5,7 @@
 
 #include "device_mgr.h"
 
-void DeviceManager::parseDeviceList(const std::string filename) {
+DeviceManager::DeviceManager(const std::string filename) {
   std::ifstream device_file(filename.c_str(), std::ifstream::in);
   std::string name;
   std::string addr;

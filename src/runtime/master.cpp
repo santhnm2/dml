@@ -3,36 +3,45 @@
 #include "../graph/node.h"
 #include "rpc/master_client.h"
 #include "rpc/node_def.pb.h"
-#include "scheduler.h"
+#include "partitioner.h"
 
 #include <iostream>
+#include <map>
+#include <vector>
 
+using grpc::Channel;
+using grpc::ClientContext;
+using grpc::Status;
+using dml::InitNodeRequest;
+using dml::InitNodeResponse;
 using dml::NodeDef;
 
-int main() {
-	DeviceManager device_mgr;
-  device_mgr.parseDeviceList("testdevicelist");
-
-  GraphManager graph_mgr;
-  graph_mgr.parseGraphSpec("testgraphspec");
-
-  Scheduler sched;
-
-  int status = sched.schedule(device_mgr, graph_mgr);
-  if (status == 1) {
-    std:: cout << "Failed to schedule, not enough devices" << std::endl;
+int main(int argc, char* argv[]) {
+  if (argc != 3) {
+    std::cout << "Usage: ./master [device list file] [graph spec file]" 
+    << std::endl;
     return 1;
   }
 
-  /* 
-    For each node, send NodeDef to the device where that node is located
-  */
+  std::string device_list_file(argv[1]);
+  std::string graph_spec_file(argv[2]);
 
-  for (int i = 0; i < graph_mgr.size(); i++) {    
-    Node* node = graph_mgr.getNodeAtIndex(i);
-    MasterClient master(grpc::CreateChannel(
-        node->device().addr(), grpc::InsecureChannelCredentials()));
-    std::string reply = master.InitNode(node->allocated_def());  // The actual RPC call!
-    std::cout << "Master received: " << reply << std::endl;
+	DeviceManager device_mgr(device_list_file);
+
+  GraphManager graph_mgr(graph_spec_file);
+
+  Partitioner partitioner;
+
+  std::map<Device, std::vector<NodeDef>> placement = 
+    partitioner.partition(device_mgr, graph_mgr);
+
+  for (auto const& it : placement) {
+    MasterClient mc(grpc::CreateChannel(
+        it.first.addr(), grpc::InsecureChannelCredentials()));
+    std::string response = mc.InitNode(it.second);
+
+    std::cout << "Master received: " << response << std::endl;
   }
+
+  // TODO(santhnm2): start computation
 }

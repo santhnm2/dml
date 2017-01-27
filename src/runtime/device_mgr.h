@@ -8,7 +8,7 @@
 
 class DeviceManager {
  public:
-  void parseDeviceList(const std::string filename);
+  DeviceManager(const std::string filename);
   std::vector<Device> devices() const;
   Device getDeviceAtIndex(int idx) const;
   int size() const;

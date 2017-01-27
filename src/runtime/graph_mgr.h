@@ -8,7 +8,7 @@
 
 class GraphManager {
  public:
-  void parseGraphSpec(const std::string filename);
+  GraphManager(const std::string filename);
   std::vector<Node> graph();
   Node* getNodeAtIndex(int idx);
   int size();

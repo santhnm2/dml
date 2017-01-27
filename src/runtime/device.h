@@ -20,11 +20,16 @@ class Device {
     type_ = d.type_;
   }
 
-  std::string name() { return name_; }
+  std::string name() const { return name_; }
 
-  std::string addr() { return addr_; }
+  std::string addr() const { return addr_; }
 
-  std::string type() { return type_; }
+  std::string type() const { return type_; }
+
+  // TODO(santhnm2): pick a more useful comparison
+  bool operator<(const Device& rhs) const {
+    return this->name_ < rhs.name_;
+  }
 
  private:
   std::string name_;

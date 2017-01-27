@@ -11,11 +11,11 @@ using dml::NodeDef;
 class Node {
  public:
   Node(NodeDef def);
-  std::string name();
-  std::string op();
-  std::string inputs();
-  std::string outputs();
-  Device device();  
+  std::string name() const;
+  std::string op() const;
+  std::string inputs() const;
+  std::string outputs() const;
+  Device device() const;
   void setDevice(Device d);
   NodeDef def();
   NodeDef* allocated_def();
