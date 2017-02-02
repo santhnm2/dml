@@ -5,7 +5,7 @@
 #include <vector>
 
 #include "device.h"
-#include "rpc/node_def.pb.h"
+#include "rpc/protos/node_def.pb.h"
 #include "device_mgr.h"
 #include "graph_mgr.h"
 

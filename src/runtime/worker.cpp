@@ -1,7 +1,7 @@
 #include "device_mgr.h"
 #include "graph_mgr.h"
 #include "../graph/node.h"
-#include "rpc/node_def.pb.h"
+#include "rpc/protos/node_def.pb.h"
 #include "rpc/worker_service.h"
 
 #include <iostream>

@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-#include "rpc/node_def.pb.h"
+#include "rpc/protos/node_def.pb.h"
 #include "graph_mgr.h"
 
 using dml::NodeDef;

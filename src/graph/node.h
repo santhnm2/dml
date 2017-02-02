@@ -4,7 +4,7 @@
 #include <string>
 
 #include "../runtime/device.h"
-#include "../runtime/rpc/node_def.pb.h"
+#include "../runtime/rpc/protos/node_def.pb.h"
 
 using dml::NodeDef;
 

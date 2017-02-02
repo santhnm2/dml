@@ -8,8 +8,8 @@
 #include <grpc++/grpc++.h>
 
 #include "../../graph/node.h"
-#include "node_def.pb.h"
-#include "worker_service.grpc.pb.h"
+#include "protos/node_def.pb.h"
+#include "protos//worker_service.grpc.pb.h"
 
 using grpc::Channel;
 using grpc::ClientAsyncResponseReader;

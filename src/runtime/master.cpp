@@ -2,7 +2,7 @@
 #include "graph_mgr.h"
 #include "../graph/node.h"
 #include "rpc/master_client.h"
-#include "rpc/node_def.pb.h"
+#include "rpc/protos/node_def.pb.h"
 #include "partitioner.h"
 
 #include <iostream>
