@@ -283,6 +283,36 @@ node_def.pb.cc.s:
 	$(MAKE) -f CMakeFiles/master.dir/build.make CMakeFiles/master.dir/node_def.pb.cc.s
 .PHONY : node_def.pb.cc.s
 
+partitioner.o: partitioner.cpp.o
+
+.PHONY : partitioner.o
+
+# target to build an object file
+partitioner.cpp.o:
+	$(MAKE) -f CMakeFiles/worker.dir/build.make CMakeFiles/worker.dir/partitioner.cpp.o
+	$(MAKE) -f CMakeFiles/master.dir/build.make CMakeFiles/master.dir/partitioner.cpp.o
+.PHONY : partitioner.cpp.o
+
+partitioner.i: partitioner.cpp.i
+
+.PHONY : partitioner.i
+
+# target to preprocess a source file
+partitioner.cpp.i:
+	$(MAKE) -f CMakeFiles/worker.dir/build.make CMakeFiles/worker.dir/partitioner.cpp.i
+	$(MAKE) -f CMakeFiles/master.dir/build.make CMakeFiles/master.dir/partitioner.cpp.i
+.PHONY : partitioner.cpp.i
+
+partitioner.s: partitioner.cpp.s
+
+.PHONY : partitioner.s
+
+# target to generate assembly for a file
+partitioner.cpp.s:
+	$(MAKE) -f CMakeFiles/worker.dir/build.make CMakeFiles/worker.dir/partitioner.cpp.s
+	$(MAKE) -f CMakeFiles/master.dir/build.make CMakeFiles/master.dir/partitioner.cpp.s
+.PHONY : partitioner.cpp.s
+
 rpc/worker_service.grpc.pb.o: rpc/worker_service.grpc.pb.cc.o
 
 .PHONY : rpc/worker_service.grpc.pb.o
@@ -312,36 +342,6 @@ rpc/worker_service.grpc.pb.cc.s:
 	$(MAKE) -f CMakeFiles/worker.dir/build.make CMakeFiles/worker.dir/rpc/worker_service.grpc.pb.cc.s
 	$(MAKE) -f CMakeFiles/master.dir/build.make CMakeFiles/master.dir/rpc/worker_service.grpc.pb.cc.s
 .PHONY : rpc/worker_service.grpc.pb.cc.s
-
-scheduler.o: scheduler.cpp.o
-
-.PHONY : scheduler.o
-
-# target to build an object file
-scheduler.cpp.o:
-	$(MAKE) -f CMakeFiles/worker.dir/build.make CMakeFiles/worker.dir/scheduler.cpp.o
-	$(MAKE) -f CMakeFiles/master.dir/build.make CMakeFiles/master.dir/scheduler.cpp.o
-.PHONY : scheduler.cpp.o
-
-scheduler.i: scheduler.cpp.i
-
-.PHONY : scheduler.i
-
-# target to preprocess a source file
-scheduler.cpp.i:
-	$(MAKE) -f CMakeFiles/worker.dir/build.make CMakeFiles/worker.dir/scheduler.cpp.i
-	$(MAKE) -f CMakeFiles/master.dir/build.make CMakeFiles/master.dir/scheduler.cpp.i
-.PHONY : scheduler.cpp.i
-
-scheduler.s: scheduler.cpp.s
-
-.PHONY : scheduler.s
-
-# target to generate assembly for a file
-scheduler.cpp.s:
-	$(MAKE) -f CMakeFiles/worker.dir/build.make CMakeFiles/worker.dir/scheduler.cpp.s
-	$(MAKE) -f CMakeFiles/master.dir/build.make CMakeFiles/master.dir/scheduler.cpp.s
-.PHONY : scheduler.cpp.s
 
 worker.o: worker.cpp.o
 
@@ -425,12 +425,12 @@ help:
 	@echo "... node_def.pb.o"
 	@echo "... node_def.pb.i"
 	@echo "... node_def.pb.s"
+	@echo "... partitioner.o"
+	@echo "... partitioner.i"
+	@echo "... partitioner.s"
 	@echo "... rpc/worker_service.grpc.pb.o"
 	@echo "... rpc/worker_service.grpc.pb.i"
 	@echo "... rpc/worker_service.grpc.pb.s"
-	@echo "... scheduler.o"
-	@echo "... scheduler.i"
-	@echo "... scheduler.s"
 	@echo "... worker.o"
 	@echo "... worker.i"
 	@echo "... worker.s"

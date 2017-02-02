@@ -8,6 +8,7 @@
 #include <thread>
 
 #include <grpc++/grpc++.h>
+#include <pthread.h>
 
 #include "../../graph/node.h"
 #include "protos/node_def.pb.h"
@@ -24,6 +25,8 @@ using dml::InitNodeResponse;
 using dml::NodeDef;
 using dml::Worker;
 
+extern pthread_mutex_t waiting_lock;
+extern pthread_cond_t waiting_cv;
 extern std::queue<Node*> fwd_waiting;
 extern std::queue<Node*> fwd_ready;
 extern std::queue<Node*> bwd;
@@ -33,14 +36,16 @@ class WorkerServiceImpl : public Worker::Service {
                   InitNodeResponse* response) override {
     for (NodeDef def : request->def()) {
       Node* n = new Node(def);
+      pthread_mutex_lock(&waiting_lock);
       fwd_waiting.push(n);
 
       // DEBUG
       std::cout << "Added node " << n->name() << " to fwd_waiting."
       << std::endl;
-    }
 
-    // TODO(santhnm2): signal condition variable
+      // TODO(santhnm2): signal condition variable
+      pthread_mutex_unlock(&waiting_lock);
+    }
 
     return Status::OK;
   }
