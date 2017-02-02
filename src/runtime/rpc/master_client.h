@@ -29,7 +29,11 @@ class MasterClient {
   std::string InitNode(std::vector<NodeDef> defs) {
     InitNodeRequest request;
 
-    // TODO(santhnm2): populate the request with the NodeDefs
+    for (NodeDef def : defs) {
+      NodeDef* def_empty = request.add_def();
+      def_empty->CopyFrom(def);
+    }
+
     InitNodeResponse response;
 
     ClientContext context;

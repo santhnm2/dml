@@ -31,7 +31,17 @@ extern std::queue<Node*> bwd;
 class WorkerServiceImpl : public Worker::Service {
   Status InitNode(ServerContext* context, const InitNodeRequest* request,
                   InitNodeResponse* response) override {
-    // TODO(santhnm2): for each NodeDef in request, add a Node* to fwd_waiting
+    for (NodeDef def : request->def()) {
+      Node* n = new Node(def);
+      fwd_waiting.push(n);
+
+      // DEBUG
+      std::cout << "Added node " << n->name() << " to fwd_waiting."
+      << std::endl;
+    }
+
+    // TODO(santhnm2): signal condition variable
+
     return Status::OK;
   }
 

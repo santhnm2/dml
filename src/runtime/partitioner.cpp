@@ -14,7 +14,14 @@ std::map<Device, std::vector<NodeDef>>
     placement[d];
   }
 
-  // TODO(santhnm2): add baseline partitioner
+  int device_idx = 0;
+  for (Node n : graph_mgr.graph()) {
+    Device d = device_mgr.devices()[device_idx];
+    n.setDevice(d);
+    placement[d].push_back(n.def());
+
+    ++device_idx %= device_mgr.size();
+  }
 
   return placement;
 }
