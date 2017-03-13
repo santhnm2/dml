@@ -46,3 +46,13 @@ Node* GraphManager::getNodeAtIndex(int idx) {
 std::vector<Node> GraphManager::graph() {
   return graph_;
 }
+
+std::vector<NodeDef> GraphManager::graphDef() {
+  std::vector<NodeDef> graphDef;
+
+  for (Node n : graph_) {
+    graphDef.push_back(n.def());
+  }
+
+  return graphDef;
+}

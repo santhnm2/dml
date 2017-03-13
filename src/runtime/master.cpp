@@ -30,6 +30,8 @@ int main(int argc, char* argv[]) {
 
   GraphManager graph_mgr(graph_spec_file);
 
+/*
+
   Partitioner partitioner;
 
   std::map<Device, std::vector<NodeDef>> placement = 
@@ -42,6 +44,16 @@ int main(int argc, char* argv[]) {
 
     std::cout << "Master received: " << response << std::endl;
   }
+*/
 
+  std::vector<NodeDef> graphDef = graph_mgr.graphDef();
+
+  for (auto it : device_mgr.devices()) {
+    MasterClient mc(grpc::CreateChannel(
+      it.addr(), grpc::InsecureChannelCredentials()));
+    std::string response = mc.InitNode(graphDef);
+
+    std::cout << response << std::endl;
+  }
   // TODO(santhnm2): start computation
 }

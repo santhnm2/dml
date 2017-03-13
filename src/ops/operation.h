@@ -6,9 +6,10 @@
 using Eigen::MatrixXd;
 
 class Operation {
-  public:
-    virtual void compute(MatrixXd &input_first,MatrixXd &output)=0;
-    virtual void compute(MatrixXd &input_first, MatrixXd &input_second,MatrixXd &output)=0;
+ public:
+  void compute(MatrixXd &input, MatrixXd &weight, MatrixXd &output) {
+
+  }
 };
 
 #endif // OPS_OPERATION_H_

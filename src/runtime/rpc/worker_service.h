@@ -3,9 +3,9 @@
 
 #include <memory>
 #include <iostream>
-#include <queue>
 #include <string>
 #include <thread>
+#include <unordered_set>
 
 #include <grpc++/grpc++.h>
 #include <pthread.h>
@@ -27,30 +27,29 @@ using dml::Worker;
 
 extern pthread_mutex_t waiting_lock;
 extern pthread_cond_t waiting_cv;
-extern std::queue<Node*> fwd_waiting;
-extern std::queue<Node*> fwd_ready;
-extern std::queue<Node*> bwd;
+extern std::unordered_set<Node*> fwd_waiting;
+extern std::unordered_set<Node*> fwd_ready;
+extern std::unordered_set<Node*> bwd;
 
 class WorkerServiceImpl : public Worker::Service {
   Status InitNode(ServerContext* context, const InitNodeRequest* request,
                   InitNodeResponse* response) override {
+    std::cout << "InitNode:entry" << std::endl; 
+    pthread_mutex_lock(&waiting_lock);
     for (NodeDef def : request->def()) {
       Node* n = new Node(def);
-      pthread_mutex_lock(&waiting_lock);
-      fwd_waiting.push(n);
+     
+      fwd_waiting.insert(n);
 
       // DEBUG
-      std::cout << "Added node " << n->name() << " to fwd_waiting."
-      << std::endl;
-
-      // TODO(santhnm2): signal condition variable
-      pthread_mutex_unlock(&waiting_lock);
+      // std::cout << "Added node " << n->name() << " to fwd_waiting."
+      // << std::endl;
     }
+    pthread_cond_signal(&waiting_cv);
+    pthread_mutex_unlock(&waiting_lock);
 
     return Status::OK;
   }
-
-  // TODO(santhnm2): add route for tensor transfer
 };
 
 #endif // RUNTIME_RPC_WORKER_SERVICE_H
