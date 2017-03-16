@@ -7,9 +7,9 @@
 
 using Eigen::MatrixXd;
 
-class AddBias : public Operation {
+class AddBias {
  public:
-  void compute(MatrixXd &input, MatrixXd &weight, MatrixXd &output) {
+  static void compute(MatrixXd &input, MatrixXd &weight, MatrixXd &output) {
     output = input;
     output.conservativeResize(output.rows(), output.cols()+1);
 

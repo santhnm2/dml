@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include <unordered_set>
+#include <unordered_map>
 
 #include <pthread.h>
 
@@ -20,9 +20,9 @@ pthread_mutex_t waiting_lock = PTHREAD_MUTEX_INITIALIZER;
 pthread_cond_t waiting_cv = PTHREAD_COND_INITIALIZER;
 pthread_mutex_t ready_lock = PTHREAD_MUTEX_INITIALIZER;
 pthread_cond_t ready_cv = PTHREAD_COND_INITIALIZER;
-std::unordered_set<Node*> fwd_waiting;
-std::unordered_set<Node*> fwd_ready;
-std::unordered_set<Node*> bwd;
+std::unordered_map<std::string, Node*> fwd_waiting;
+std::unordered_map<std::string, Node*> fwd_ready;
+std::unordered_map<std::string, Node*> bwd;
 
 void* RunServer(void* arg) {
   std::string server_address((char*) arg);
@@ -56,31 +56,43 @@ void* Waiting(void* arg) {
       // Wait for nodes to be inserted in to the waiting queue
       pthread_cond_wait(&waiting_cv, &waiting_lock);
       std::cout << "Waiting: Woke up!" << std::endl;
-
-      // Move any nodes with all dependencies met to the running queue
-      auto it = fwd_waiting.begin();
-      while (it != fwd_waiting.end()) {
-        Node *n = *it;
-        if (n->forwardDependencies() == 0) {
-            fwd_ready.insert(n);
-            it = fwd_waiting.erase(it);  
-        } else {
-          it++;
-        }
-      }
-
-      // Run all nodes in the running queue
-      it = fwd_ready.begin();
-      while (it != fwd_ready.end()) {
-        Node *n = *it;
-        n->compute();
-      }
-      // node->compute
-      // for each output in node->outputs:
-      //  output->input = node->output
-
-      // Move all nodes in the running queue to the backward queue
     }
+      
+    // Move any nodes with all dependencies met to the running queue
+    auto it = fwd_waiting.begin();
+    while (it != fwd_waiting.end()) {
+      Node *n = it->second;
+      if (n->getForwardDependencies() == 0) {
+          std::cout << "Moving node \"" << n->name() << "\" to the running queue." << std::endl; 
+          fwd_ready.insert({n->name(), n});
+          it = fwd_waiting.erase(it);
+      } else {
+        it++;
+      }
+    }
+
+    // Run all nodes in the running queue
+    it = fwd_ready.begin();
+    while (it != fwd_ready.end()) { 
+      Node *n = it->second;
+
+      std::cout << "Running node \"" << n->name() << "\"." << std::endl;
+
+      n->compute();
+
+      for (auto output_name : n->outputs()) {
+        Node *n_output = fwd_waiting[output_name];
+        n_output->setInput(n->getOutput());
+        int fwd_deps = n_output->getForwardDependencies();
+        n_output->setForwardDependencies(fwd_deps-1);
+        std::cout << "Set node \"" << n_output->name() << "\"'s dependencies to " << fwd_deps-1 << std::endl;
+      }
+
+      it = fwd_ready.erase(it);
+    }
+
+    // Move all nodes in the running queue to the backward queue
+
     pthread_mutex_unlock(&waiting_lock);
   }
 }

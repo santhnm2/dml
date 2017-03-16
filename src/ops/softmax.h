@@ -7,9 +7,9 @@
 
 using Eigen::MatrixXd;
 
-class Softmax : public Operation {
+class Softmax {
  public:
-  void compute(MatrixXd &input, MatrixXd &weight, MatrixXd &output) {
+  static void compute(MatrixXd &input, MatrixXd &weight, MatrixXd &output) {
     output = MatrixXd(input.rows(), 1);
 
     double sum_exp = 0.0;

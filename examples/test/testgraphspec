@@ -1,19 +1,19 @@
 source
--
+input
 -
 A
 
 A
-weight+bias
+bias
 source
 B
 
 B
-softmax
+weight
 A
-err
+C
 
-err
-square_error
+C
+softmax
 B
 -

@@ -27,9 +27,9 @@ using dml::Worker;
 
 extern pthread_mutex_t waiting_lock;
 extern pthread_cond_t waiting_cv;
-extern std::unordered_set<Node*> fwd_waiting;
-extern std::unordered_set<Node*> fwd_ready;
-extern std::unordered_set<Node*> bwd;
+extern std::unordered_map<std::string, Node*> fwd_waiting;
+extern std::unordered_map<std::string, Node*> fwd_ready;
+extern std::unordered_map<std::string, Node*> bwd;
 
 class WorkerServiceImpl : public Worker::Service {
   Status InitNode(ServerContext* context, const InitNodeRequest* request,
@@ -39,7 +39,7 @@ class WorkerServiceImpl : public Worker::Service {
     for (NodeDef def : request->def()) {
       Node* n = new Node(def);
      
-      fwd_waiting.insert(n);
+      fwd_waiting.insert({n->name(), n});
 
       // DEBUG
       // std::cout << "Added node " << n->name() << " to fwd_waiting."
