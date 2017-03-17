@@ -51,7 +51,7 @@ void* Waiting(void* arg) {
   bool fwd = true;
 
   int iterations = 0;
-  while (iterations < 3000) {
+  while (iterations < 3001) {
     pthread_mutex_lock(&waiting_lock);
     // std::cout << "Waiting: Acquired waiting lock" << std::endl;
     while (fwd && fwd_waiting.empty()) {
@@ -100,7 +100,7 @@ void* Waiting(void* arg) {
         it = fwd_ready.erase(it);
 
         if (fwd_waiting.empty() && fwd_ready.empty()) {
-          std::cout << "Iteration " << iterations << ": ";
+          std::cout << "Iteration " << iterations + 1 << ": ";
           fwd = false;
         }
       } 

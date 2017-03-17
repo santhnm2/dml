@@ -23,7 +23,7 @@ class Error {
        for (int i = 0; i < n->data1.rows(); i++) {
         loss += (n->data1(i, 0) - n->data2(i, 0));
       }
-      loss /= 2.0;
+      loss /= (2 * n->data1.rows());
       std::cout << "Loss = " << loss << std::endl;
       //std::this_thread::sleep_for (std::chrono::seconds(2));
     } else {
@@ -31,7 +31,7 @@ class Error {
       for (int i = 0; i < n->data1.rows(); i++) {
         n->inputs()[1]->data2(0, 0) += (n->data1(i, 0) - n->data2(i, 0));
       }
-      n->inputs()[1]->data2(0, 0) = n->inputs()[1]->data2(0, 0) * -1.0 / n->data1.rows();
+      n->inputs()[1]->data2(0, 0) = n->inputs()[1]->data2(0, 0) * -1.0 / (2 * n->data1.rows());
     }
 
     // output = MatrixXd::Zero(1, 1);

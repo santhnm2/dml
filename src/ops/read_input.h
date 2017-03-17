@@ -111,11 +111,11 @@ class ReadInput {
       for (uint32_t i = 0; i < minibatch_size; i++) {
         int idx = rand() % n->data1.rows();
         double label = n->data2(idx, 0);
-        if (label == 0 || label == 1) {
-          n->outputs()[0]->data1.row(i) = n->data1.row(idx);
-          n->outputs()[1]->data2.row(i) = n->data2.row(idx);  
+        n->outputs()[0]->data1.row(i) = n->data1.row(idx);
+        if (label == 9) {
+          n->outputs()[1]->data2(i, 0) = 1;  
         } else {
-          i--;
+          n->outputs()[1]->data2(i, 0) = 0;
         }
       }
 
