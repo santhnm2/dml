@@ -53,21 +53,17 @@ void* Waiting(void* arg) {
   int iterations = 0;
   while (iterations < 3001) {
     pthread_mutex_lock(&waiting_lock);
-    // std::cout << "Waiting: Acquired waiting lock" << std::endl;
     while (fwd && fwd_waiting.empty()) {
-      // std::cout << "Waiting: Going to sleep" << std::endl;
       // Wait for nodes to be inserted in to the waiting queue
       pthread_cond_wait(&waiting_cv, &waiting_lock);
-      // std::cout << "Waiting: Woke up!" << std::endl;
     }
     
     if (fwd) {
-      // Move any nodes with all dependencies met to the running queue
+      // Move any nodes with all dependencies met to the ready queue
       auto it = fwd_waiting.begin();
       while (it != fwd_waiting.end()) {
         Node *n = it->second;
         if (n->getForwardDependencies() == 0) {
-            // std::cout << "Moving node \"" << n->name() << "\" to the running queue." << std::endl; 
             fwd_ready.insert({n->name(), n});
             it = fwd_waiting.erase(it);
         } else {
@@ -75,25 +71,19 @@ void* Waiting(void* arg) {
         }
       }
 
-      // Run all nodes in the running queue
+      // Run all nodes in the ready queue
       it = fwd_ready.begin();
       while (it != fwd_ready.end()) { 
         Node *n = it->second;
 
-        // std::cout << "Running node \"" << n->name() << "\"." << std::endl;
-
-        //n->compute();
         Operation::compute(n, fwd);
 
         for (auto output_name : n->output_names()) {
           Node *n_output = fwd_waiting[output_name];
-          // n_output->setInput(n->getOutput());
           int fwd_deps = n_output->getForwardDependencies();
           n_output->setForwardDependencies(fwd_deps-1);
-          // std::cout << "Set node \"" << n_output->name() << "\"'s forward dependencies to " << fwd_deps-1 << std::endl;
         }
 
-        // std::cout << "Set node \"" << n->name() << "\"'s backward dependencies to " << n->outputs().size() << std::endl;
         n->setBackwardDependencies(n->outputs().size());
         bwd.insert({n->name(), n});
         
@@ -109,15 +99,12 @@ void* Waiting(void* arg) {
       while (it != bwd.end()) {
         Node *n = it->second;
         if (n->getBackwardDependencies() == 0) {
-          // std::cout << "Running node \"" << n->name() << "\" in reverse." << std::endl;
           Operation::compute(n, fwd);
 
           for (auto input_name : n->input_names()) {
             Node *n_input = bwd[input_name];
-            // n_output->setInput(n->getOutput());
             int bwd_deps = n_input->getBackwardDependencies();
             n_input->setBackwardDependencies(bwd_deps-1);
-            // std::cout << "Set node \"" << n_input->name() << "\"'s dependencies to " << bwd_deps-1 << std::endl;
           }
 
           n->setForwardDependencies(n->inputs().size());
@@ -133,17 +120,7 @@ void* Waiting(void* arg) {
         }
       }
     }
-
-
-
-    // it = bwd.begin();
-    // while (it != bwd.end()) {
-    //   Node *n = it->second;
-
-    //   // n->computeBwd();
-
-    // }
-
+    
     pthread_mutex_unlock(&waiting_lock);
   }
 }

@@ -21,7 +21,7 @@ using namespace std;
 
 class ReadInput {
  public:
-  static void compute(Node *n, bool fwd) {//MatrixXd &input, MatrixXd &weight, MatrixXd &output) {
+  static void compute(Node *n, bool fwd) {
     if (fwd) {
       if (n->data1.rows() == 0) {
         std::cout << "Reading data..." << std::endl;
@@ -118,13 +118,8 @@ class ReadInput {
           n->outputs()[1]->data2(i, 0) = 0;
         }
       }
-
-      // cout << "Selected a new minibatch" << endl;
-     // cout << n->outputs()[0]->data1.transpose() << endl;
   } else {
-    // cout << "Reached the end of an iteration!" << endl;
-  }
-    //cout << output.col(0) << endl << endl;
+    // Do nothing
   } 
 };
 

@@ -15,10 +15,8 @@ using Eigen::MatrixXd;
 
 class Error {
  public:
-  static void compute(Node *n, bool fwd) {//)MatrixXd &input, MatrixXd &weight, MatrixXd &output) {
+  static void compute(Node *n, bool fwd) {
     if (fwd) {
-      //std::cout << "y_hat:" << std::endl;
-      //std::cout << n->data1 << std::endl;
       double loss = 0.0;
        for (int i = 0; i < n->data1.rows(); i++) {
         loss += (n->data1(i, 0) - n->data2(i, 0));
@@ -33,18 +31,7 @@ class Error {
       }
       n->inputs()[1]->data2(0, 0) = n->inputs()[1]->data2(0, 0) * -1.0 / (2 * n->data1.rows());
     }
-
-    // output = MatrixXd::Zero(1, 1);
-    // for (int i = 0; i < input.rows(); i++) {
-    //   output(0, 0) += (input(i, 0) - weight(i, 0)) * 
-    //                   (input(i, 0) - weight(i, 0));
-    //   output(0, 0) /= 2.0;
   }
-
-  // static void computeBwd(MatrixXd &input, MatrixXd &weight, MatrixXd &output) {
-  //   output = MatrixXd::Zero(1, 1);
-    
-  // }
 };
 
 #endif // OPS_ERR_H
