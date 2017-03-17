@@ -1,5 +1,5 @@
 #include "node.h"
-#include "../ops/operation.h"
+// #include "../ops/operation.h"
 // #include "../ops/ops_store.h"
 #include "../util/util.h"
 
@@ -29,29 +29,37 @@ Node::Node(NodeDef def) {
 
   // op_ = OpsStore::requestOp(op_str_);
 
-  inputs_ = parse(inputs_str_, ":");
-  outputs_ = parse(outputs_str_, ":");
+  input_names_ = parse(inputs_str_, ":");
+  output_names_ = parse(outputs_str_, ":");
   
-  fwd_deps_ = inputs_.size();
+  fwd_deps_ = input_names_.size();
   bwd_deps_ = 0;
 
-  std::cout << "Node \"" << name_ << "\" initialized with " << fwd_deps_ << " forward dependencies." << std::endl;
+  // std::cout << "Node \"" << name_ << "\" initialized with " << fwd_deps_ << " forward dependencies." << std::endl;
 }
 
 std::string Node::name() const {
   return name_;
 }
 
-// Operation Node::op() const {
-//   return op_;
-// }
+std::string Node::op() const {
+  return op_;
+}
 
-std::vector<std::string> Node::inputs() const {
+std::vector<Node*> Node::inputs() {
   return inputs_;
 }
 
-std::vector<std::string> Node::outputs() const {
+std::vector<Node*> Node::outputs() {
   return outputs_;
+}
+
+std::vector<std::string> Node::input_names() const {
+  return input_names_;
+}
+
+std::vector<std::string> Node::output_names() const {
+  return output_names_;
 }
 
 Device Node::device() const {
@@ -62,31 +70,39 @@ MatrixXd Node::getInput() {
   return input_;
 }
 
-MatrixXd Node::getWeight() {
-  return weight_;
-}
-
-MatrixXd Node::getOutput() {
-  return output_;
-}
-
 void Node::setInput(MatrixXd input) {
   input_ = input;
 }
 
+MatrixXd Node::getWeight() {
+  return weight_;
+}
+
 void Node::setWeight(MatrixXd weight) {
   weight_ = weight;
+} 
+
+MatrixXd Node::getOutput() {
+  return output_;
 }
 
 void Node::setOutput(MatrixXd output) {
   output_ = output;
 }
 
-void Node::compute() {
+void Node::addInEdge(Node* n) {
+  inputs_.push_back(n);
+}
+
+void Node::addOutEdge(Node *n) {
+  outputs_.push_back(n);
+}
+
+/*void Node::compute() {
   // op_.compute(input_, weight_, output_);
   std::cout << "Running operation " << op_ << std::endl;
   Operation::compute(op_, input_, weight_, output_);
-}
+}*/
 
 void Node::setDevice(Device d) {
   device_ = d;
@@ -120,7 +136,7 @@ void Node::setForwardDependencies(int deps) {
 }
 
 int Node::getBackwardDependencies() {
-  return fwd_deps_;
+  return bwd_deps_;
 }
 
 void Node::setBackwardDependencies(int deps) {

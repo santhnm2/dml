@@ -22,7 +22,7 @@ set_source_files_properties(${CMAKE_SOURCE_DIR}/runtime/rpc/protos/node_def.pb.c
 
 set (SOURCES ${CMAKE_SOURCE_DIR}/runtime/graph_mgr.cpp 
 			 ${CMAKE_SOURCE_DIR}/runtime/device_mgr.cpp 
-			 ${CMAKE_SOURCE_DIR}/runtime/partitioner.cpp
+			 # ${CMAKE_SOURCE_DIR}/runtime/partitioner.cpp
 			 ${CMAKE_SOURCE_DIR}/graph/node.cpp 
 			 ${CMAKE_SOURCE_DIR}/runtime/rpc/protos/node_def.pb.cc 
 			 ${CMAKE_SOURCE_DIR}/runtime/rpc/protos/worker_service.pb.cc

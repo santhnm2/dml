@@ -1,19 +1,19 @@
 source
 input
 -
-A
+A:C
 
 A
-bias
+weight
 source
 B
 
 B
-weight
+sigmoid
 A
 C
 
 C
-softmax
-B
+error
+source:B
 -

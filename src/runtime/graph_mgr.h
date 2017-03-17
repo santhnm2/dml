@@ -1,6 +1,7 @@
 #ifndef RUNTIME_GRAPH_MANAGER_H
 #define RUNTIME_GRAPH_MANAGER_H
 
+#include <map>
 #include <string>
 #include <vector>
 
@@ -11,14 +12,18 @@ using dml::NodeDef;
 
 class GraphManager {
  public:
+  GraphManager();
   GraphManager(const std::string filename);
-  std::vector<Node> graph();
+  void eraseGraph();
+  void addNode(Node *n);
+  std::map<std::string, Node*> graph();
   std::vector<NodeDef> graphDef();
-  Node* getNodeAtIndex(int idx);
+  void connectNodes();
+  Node* getNode(std::string name);
   int size();
 
  private:
-  std::vector<Node> graph_;
+  std::map<std::string, Node*> graph_;
 };
 
 #endif // RUNTIME_DEVICE_MANAGER_H

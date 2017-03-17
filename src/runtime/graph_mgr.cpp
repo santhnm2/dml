@@ -8,6 +8,11 @@
 
 using dml::NodeDef;
 
+GraphManager::GraphManager() {
+
+}
+
+
 GraphManager::GraphManager(const std::string filename) {
   std::ifstream graph_spec(filename.c_str(), std::ifstream::in);
   std::string name;
@@ -24,11 +29,18 @@ GraphManager::GraphManager(const std::string filename) {
       def.set_op(op);
       def.set_inputs(inputs);
       def.set_outputs(outputs);
-      Node node(def);
-      graph_.push_back(node);
+      Node* n = new Node(def);
+      addNode(n);
       getline(graph_spec, newline);
     }
     graph_spec.close();
+  }
+}
+
+void GraphManager::eraseGraph() {
+  for (auto it = graph_.begin(); it != graph_.end(); it++) {
+    Node *n = it->second;
+    delete n;
   }
 }
 
@@ -36,22 +48,35 @@ int GraphManager::size() {
   return graph_.size();
 }
 
-Node* GraphManager::getNodeAtIndex(int idx) {
-  if (idx >= graph_.size() || idx < 0) {
-    return NULL;
-  } 
-  return &graph_[idx];
+void GraphManager::addNode(Node* n) {
+  graph_.insert({n->name(), n});
+} 
+
+void GraphManager::connectNodes() {
+  for (auto it = graph_.begin(); it != graph_.end(); it++) {
+    Node *n = it->second;
+    for (auto input : n->input_names()) {
+      n->addInEdge(getNode(input));
+    }
+    for (auto output : n->output_names()) {
+      n->addOutEdge(getNode(output));
+    }
+  }
 }
 
-std::vector<Node> GraphManager::graph() {
+Node* GraphManager::getNode(std::string name) {
+  return graph_[name];
+}
+
+std::map<std::string, Node*> GraphManager::graph() {
   return graph_;
 }
 
 std::vector<NodeDef> GraphManager::graphDef() {
   std::vector<NodeDef> graphDef;
 
-  for (Node n : graph_) {
-    graphDef.push_back(n.def());
+  for (auto it = graph_.begin(); it != graph_.end(); it++) {
+    graphDef.push_back(it->second->def());
   }
 
   return graphDef;

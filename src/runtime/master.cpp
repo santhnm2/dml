@@ -3,7 +3,7 @@
 #include "../graph/node.h"
 #include "rpc/master_client.h"
 #include "rpc/protos/node_def.pb.h"
-#include "partitioner.h"
+// #include "partitioner.h"
 
 #include <iostream>
 #include <map>
@@ -54,6 +54,8 @@ int main(int argc, char* argv[]) {
     std::string response = mc.InitNode(graphDef);
 
     std::cout << response << std::endl;
+
+    graph_mgr.eraseGraph();
   }
   // TODO(santhnm2): start computation
 }

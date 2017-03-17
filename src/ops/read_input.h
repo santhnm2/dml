@@ -7,6 +7,8 @@
 // #include <arpa/inet.h>
 // #include <inttypes.h>
 
+#include "../graph/node.h"
+
 #include <byteswap.h>
 #include <stdlib.h>
 #include <stdint.h>
@@ -19,119 +21,111 @@ using namespace std;
 
 class ReadInput {
  public:
-  static void compute(MatrixXd &input, MatrixXd &weight, MatrixXd &output) {
-    if (input.rows() == 0) {
-      FILE *myfile = fopen("examples/test/train-images-idx3-ubyte", "rb");
-      if (!myfile) {
-        cout << "Could not read data" << endl;
-        return;
+  static void compute(Node *n, bool fwd) {//MatrixXd &input, MatrixXd &weight, MatrixXd &output) {
+    if (fwd) {
+      if (n->data1.rows() == 0) {
+        std::cout << "Reading data..." << std::endl;
+        FILE *image_file = fopen("examples/test/train-images-idx3-ubyte", "rb");
+        if (!image_file) {
+          cout << "Could not read data" << endl;
+          return;
+        }
+
+        uint32_t value;
+        
+        // Magic number
+        fread(&value, sizeof(uint32_t), 1, image_file);
+        uint32_t magic_number = __bswap_32(value);
+
+        if (magic_number != 2051) {
+          cout << "Could not read data" << endl;
+          return;
+        }
+
+        // Images
+        fread(&value, sizeof(uint32_t), 1, image_file);
+        uint32_t images = __bswap_32(value);
+
+        // Rows
+        fread(&value, sizeof(uint32_t), 1, image_file);
+        uint32_t rows = __bswap_32(value);
+
+        // Cols
+        fread(&value, sizeof(uint32_t), 1, image_file);
+        uint32_t cols = __bswap_32(value);
+
+        n->data1 = MatrixXd::Zero(images, rows*cols);
+
+        uint8_t pixel;
+
+        for (int i = 0; i < images; i++) {
+          for (int j = 0; j < rows*cols; j++) {
+            fread(&pixel, sizeof(uint8_t), 1, image_file);
+            n->data1(i, j) = pixel / 255.0;
+          }
+        }
+
+        fclose(image_file);
+
+        FILE *label_file = fopen("examples/test/train-labels-idx1-ubyte", "rb");
+        if (!label_file) {
+          cout << "Could not read labels" << endl;
+          return;
+        }
+
+        fread(&value, sizeof(uint32_t), 1, label_file);
+        magic_number = __bswap_32(value);
+
+        // cout << "Magic number = " << magic_number << endl;
+
+        if (magic_number != 2049) {
+          cout << "Could not read labels" << endl;
+          return;
+        }
+
+        fread(&value, sizeof(uint32_t), 1, label_file);
+        images = __bswap_32(value);
+        if (images != n->data1.rows()) {
+          cout << "Mismatch between images and labels" << endl;
+          return;
+        }
+
+        n->data2 = MatrixXd::Zero(images, 1);
+
+        uint8_t label;
+
+        for (int i = 0; i < images; i++) {
+          fread(&label, sizeof(uint8_t), 1, label_file);
+          n->data2(i, 0) = label;
+        }
+
+        fclose(label_file);
+
+        cout << "Finished reading data" << endl;
       }
 
-      uint32_t value;
-      size_t bytes;
-
-      // Magic number
-      bytes = fread(&value, sizeof(uint32_t), 1, myfile);
-      cout << "Read " << bytes << " bytes" << endl;
-      uint32_t magic_number = __bswap_32(value);
-
-      cout << "Magic number = " << magic_number << endl;
-      if (magic_number != 2051) {
-        cout << "Could not read data" << endl;
-        return;
-      }
-
-      // Images
-      fread(&value, sizeof(uint32_t), 1, myfile);
-      cout << "Read " << bytes << " bytes" << endl;
-      uint32_t images = __bswap_32(value);
-      printf("%lu images\n", (unsigned long) images);
-
-      // Rows
-      fread(&value, sizeof(uint32_t), 1, myfile);
-      cout << "Read " << bytes << " bytes" << endl;
-      uint32_t rows = __bswap_32(value);
-      printf("%lu rows\n", (unsigned long) rows);
-
-      // Cols
-      fread(&value, sizeof(uint32_t), 1, myfile);
-      cout << "Read " << bytes << " bytes" << endl;
-      uint32_t cols = __bswap_32(value);
-      printf("%lu cols\n", (unsigned long) cols);
-
-      input = MatrixXd(images, rows*cols);
-
-      uint8_t pixel;
-
-      for (int i = 0; i < images; i++) {
-        for (int j = 0; j < rows*cols; j++) {
-          fread(&pixel, sizeof(uint8_t), 1, myfile);
-          input(i, j) = pixel;
+      uint32_t minibatch_size = 100;
+      n->outputs()[0]->data1 = MatrixXd::Zero(minibatch_size, n->data1.cols());
+      n->outputs()[1]->data2 = MatrixXd::Zero(minibatch_size, 1);
+      
+      for (uint32_t i = 0; i < minibatch_size; i++) {
+        int idx = rand() % n->data1.rows();
+        double label = n->data2(idx, 0);
+        if (label == 0 || label == 1) {
+          n->outputs()[0]->data1.row(i) = n->data1.row(idx);
+          n->outputs()[1]->data2.row(i) = n->data2.row(idx);  
+        } else {
+          i--;
         }
       }
 
-      // ifstream myfile;
-      // size_t size = 4;
-      // myfile.open("../../examples/test/train-images-idx3-ubyte", 
-      //             ios::in | ios::binary);
-      // myfile.seekg(0, ios::beg);
-      // char data[size];
-      
-      // myfile.read(data, size);
-      // printf("data = %s\n", data);
-      // uint32_t magic_number = ReadInput::_read32(data);
-      // cout << "Magic number = " << magic_number << endl;
-      // if (magic_number != 2051) {
-      //   cout << "Failed to read data." << endl;
-      //   return;
-      // } else {
-      //   cout << "Successfully read data." << endl;
-      // }
-
-      // myfile.read(data, size);
-      // uint32_t num_images = ReadInput::_read32(data);
-
-
-      // myfile.read(data, size);
-      // uint32_t num_rows = ReadInput::_read32(data);
-
-
-      // myfile.read(data, size);
-      // uint32_t num_columns = ReadInput::_read32(data);
-
-      // num_images = 1000;
-
-      // input = MatrixXd(num_images, num_rows*num_columns);
-
-      // for (uint32_t i = 0; i < num_images; i++) {
-      //   for (uint32_t j = 0; j < num_rows * num_columns; j++) {
-      //     myfile.read(data, size);
-      //     input(i, j) = ReadInput::_read32(data);
-      //   }
-      // }
-      fclose(myfile);
-    }
-    
-    cout << "Finished reading data" << endl;
-
-    uint32_t minibatch_size = 100;
-    output = MatrixXd(minibatch_size, input.cols());
-    
-    for (uint32_t i = 0; i < minibatch_size; i++) {
-      int idx = rand() % input.rows();
-      output.row(i) = input.row(idx);
-    }
-
-    cout << output << endl;
+      // cout << "Selected a new minibatch" << endl;
+     // cout << n->outputs()[0]->data1.transpose() << endl;
+  } else {
+    // cout << "Reached the end of an iteration!" << endl;
   }
- private:
-  static uint32_t _read32(char* buf) {
-    uint32_t result = (uint32_t) buf[0] << 24 |
-                      (uint32_t) buf[1] << 16 |
-                      (uint32_t) buf[2] << 8  |
-                      (uint32_t) buf[3];
-    return result;
-  }
+    //cout << output.col(0) << endl << endl;
+  } 
 };
 
 #endif // OPS_READ_INPUT_H
