@@ -118,8 +118,9 @@ class ReadInput {
           n->outputs()[1]->data2(i, 0) = 0;
         }
       }
-  } else {
-    // Do nothing
+    } else {
+      // Do nothing
+    }
   } 
 };
 
