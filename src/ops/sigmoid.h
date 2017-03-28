@@ -15,36 +15,26 @@ class Sigmoid {
  public:
   static void compute(Node *n, bool fwd) {
     if (fwd) {
-      n->data2 = MatrixXd::Zero(n->data1.rows(), n->data1.cols());
+      n->fwd_data = MatrixXd::Zero(n->fwd_input.rows(), n->fwd_input.cols());
 
-      for (int i = 0; i < n->data1.rows(); i++) {
-        for (int j = 0; j < n->data1.cols(); j++) {
-          n->data2(i, j) = 1.0 / (1.0 + exp(-n->data1(i, j)));
+      for (int i = 0; i < n->fwd_input.rows(); i++) {
+        for (int j = 0; j < n->fwd_input.cols(); j++) {
+          n->fwd_data(i, j) = 1.0 / (1.0 + exp(-n->fwd_input(i, j)));
         }
       }
-
-      // std::cout << "sigmoid shape = (" << n->data2.rows() << ", " << n->data2.cols() << ")" << std::endl;
-      // std::cout << n->data2.transpose() << std::endl << std::endl;
-      n->outputs()[0]->data1 = n->data2;
+      n->outputs()[0]->fwd_input = n->fwd_data;
     } else {
-      // MatrixXd temp = MatrixXd::Zero(n->data1.rows(), n->data2.rows());
-      // for (int i = 0; i < n->data1.rows(); i++) {
-      //   for (int j = 0; j < n->data1.cols(); j++) {
-      //     double denom = (1.0 + exp(-n->data1(i, j)));
-      //     temp(i, j) = exp(-n->data1(i, j)) / (denom * denom);
-      //   }
-      // }
-      
-      // n->data1 = n->data2(0, 0) * temp;
-      n->data3 = MatrixXd::Zero(n->data1.rows(), n->data1.cols());
+      if (n->bwd.rows() == 0) {
+        n->bwd = MatrixXd::Zero(n->fwd_input.rows(), n->fwd_input.cols());  
+      }
 
-      for (int i = 0; i < n->data3.rows(); i++) {
-        for (int j = 0; j < n->data3.cols(); j++) {
-          n->data3(i, j) = n->data2(i, j) * (1 - n->data2(i, j));
+      for (int i = 0; i < n->bwd.rows(); i++) {
+        for (int j = 0; j < n->bwd.cols(); j++) {
+          n->bwd(i, j) = n->fwd_data(i, j) * (1 - n->fwd_data(i, j));
         }
       }
 
-      n->data3 = n->outputs()[0]->data3.cwiseProduct(n->data3); 
+      n->bwd = n->outputs()[0]->bwd.cwiseProduct(n->bwd); 
     }
   }
 };

@@ -1,6 +1,4 @@
 #include "node.h"
-// #include "../ops/operation.h"
-// #include "../ops/ops_store.h"
 #include "../util/util.h"
 
 #include <iostream>
@@ -13,13 +11,7 @@ using Eigen::MatrixXd;
 using dml::NodeDef;
 
 Node::Node(NodeDef def) {
-  // TODO(santhnm2): assign Op to Node based on op string
-  // TODO(santhnm2): parse input string
-  // TODO(santhnm2): parse output string
-
   def.name() == "-" ? name_ = "" : name_ = def.name();
-
-  // def.op() == "-" ? op_str_ = "" : op_str_ = def.op();
 
   def.op() == "-" ? op_ = "" : op_ = def.op();
 
@@ -27,15 +19,12 @@ Node::Node(NodeDef def) {
 
   def.outputs() == "-" ? outputs_str_ = "" : outputs_str_ = def.outputs();
 
-  // op_ = OpsStore::requestOp(op_str_);
-
   input_names_ = parse(inputs_str_, ":");
   output_names_ = parse(outputs_str_, ":");
   
   fwd_deps_ = input_names_.size();
   bwd_deps_ = 0;
 
-  // std::cout << "Node \"" << name_ << "\" initialized with " << fwd_deps_ << " forward dependencies." << std::endl;
 }
 
 std::string Node::name() const {
@@ -98,12 +87,6 @@ void Node::addOutEdge(Node* n) {
   outputs_.push_back(n);
 }
 
-/*void Node::compute() {
-  // op_.compute(input_, weight_, output_);
-  std::cout << "Running operation " << op_ << std::endl;
-  Operation::compute(op_, input_, weight_, output_);
-}*/
-
 void Node::setDevice(Device d) {
   device_ = d;
 }
@@ -120,7 +103,6 @@ NodeDef Node::def() {
 NodeDef* Node::allocated_def() {
   NodeDef *def = new NodeDef();
   def->set_name(name_);
-  // def->set_op(op_str_);
   def->set_op(op_);
   def->set_inputs(inputs_str_);
   def->set_outputs(outputs_str_);

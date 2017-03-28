@@ -51,7 +51,7 @@ void* Waiting(void* arg) {
   bool fwd = true;
 
   int iterations = 0;
-  while (iterations < 10000) {
+  while (iterations < 1000) {
     pthread_mutex_lock(&waiting_lock);
     while (fwd && fwd_waiting.empty()) {
       // Wait for nodes to be inserted in to the waiting queue
@@ -101,6 +101,8 @@ void* Waiting(void* arg) {
       while (it != bwd.end()) {
         Node *n = it->second;
         if (n->getBackwardDependencies() == 0) {
+          // std::cout << "Running node " << n->name() << std::endl;
+
           Operation::compute(n, fwd);
 
           for (auto input_name : n->input_names()) {

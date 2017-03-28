@@ -6,7 +6,6 @@
 
 #include <Eigen/Dense>
 
-// #include "../ops/operation.h"
 #include "../runtime/device.h"
 #include "../runtime/rpc/protos/node_def.pb.h"
 
@@ -26,7 +25,6 @@ class Node {
   void setDevice(Device d);
   NodeDef def();
   NodeDef* allocated_def();
-  //void compute();
   int getForwardDependencies();
   void setForwardDependencies(int deps);
   int getBackwardDependencies();
@@ -39,9 +37,9 @@ class Node {
   void setOutput(MatrixXd output);
   void addInEdge(Node* n);
   void addOutEdge(Node* n);
-  MatrixXd data1;
-  MatrixXd data2;
-  MatrixXd data3;
+  MatrixXd fwd_input;
+  MatrixXd fwd_data;
+  MatrixXd bwd;
  private:
   int fwd_deps_;
   int bwd_deps_;
@@ -57,7 +55,6 @@ class Node {
   MatrixXd input_;
   MatrixXd weight_;
   MatrixXd output_;
-  // Operation op_;
 };
 
 #endif // GRAPH_NODE_H

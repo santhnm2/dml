@@ -2,10 +2,6 @@
 #define OPS_READ_INPUT_H
 
 #include <iostream>
-// #include <fstream>
-
-// #include <arpa/inet.h>
-// #include <inttypes.h>
 
 #include "../graph/node.h"
 
@@ -23,7 +19,7 @@ class ReadInput {
  public:
   static void compute(Node* n, bool fwd) {
     if (fwd) {
-      if (n->data1.rows() == 0) {
+      if (n->fwd_input.rows() == 0) {
         std::cout << "Reading data..." << std::endl;
         FILE *image_file = fopen("examples/test/train-images-idx3-ubyte", "rb");
         if (!image_file) {
@@ -54,14 +50,14 @@ class ReadInput {
         fread(&value, sizeof(uint32_t), 1, image_file);
         uint32_t cols = __bswap_32(value);
 
-        n->data1 = MatrixXd::Zero(images, rows*cols);
+        n->fwd_input = MatrixXd::Zero(images, rows*cols);
 
         uint8_t pixel;
 
         for (int i = 0; i < images; i++) {
           for (int j = 0; j < rows*cols; j++) {
             fread(&pixel, sizeof(uint8_t), 1, image_file);
-            n->data1(i, j) = pixel / 255.0;
+            n->fwd_input(i, j) = pixel / 255.0;
           }
         }
 
@@ -76,8 +72,6 @@ class ReadInput {
         fread(&value, sizeof(uint32_t), 1, label_file);
         magic_number = __bswap_32(value);
 
-        // cout << "Magic number = " << magic_number << endl;
-
         if (magic_number != 2049) {
           cout << "Could not read labels" << endl;
           return;
@@ -85,71 +79,28 @@ class ReadInput {
 
         fread(&value, sizeof(uint32_t), 1, label_file);
         images = __bswap_32(value);
-        if (images != n->data1.rows()) {
+        if (images != n->fwd_input.rows()) {
           cout << "Mismatch between images and labels" << endl;
           return;
         }
 
-        n->data2 = MatrixXd::Zero(images, 1);
+        n->fwd_data = MatrixXd::Zero(images, 1);
 
         uint8_t label;
 
         for (int i = 0; i < images; i++) {
           fread(&label, sizeof(uint8_t), 1, label_file);
-          n->data2(i, 0) = label;
+          n->fwd_data(i, 0) = label;
         }
 
         fclose(label_file);
 
         cout << "Finished reading data" << endl;
-
-        // n->data1 = MatrixXd::Zero(4, 3);
-        // n->outputs()[0]->data1 = MatrixXd::Zero(4, 3);
-        // n->outputs()[0]->data1 << 0, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1;
-
-        // n->outputs()[1]->data2 = MatrixXd::Zero(4, 1);
-        // n->outputs()[1]->data2 << 0, 0, 1, 1;
-
-
-        // std::cout << n->outputs()[0]->data1 << std::endl << std::endl;
-        // std::cout << n->outputs()[1]->data2 << std::endl << std::endl;
-
-        /* DELETE THIS */
-
-        // uint32_t minibatch_size = 100;
-        // n->outputs()[0]->data1 = MatrixXd::Zero(minibatch_size, n->data1.cols());
-        // n->outputs()[1]->data2 = MatrixXd::Zero(minibatch_size, 1);
-        
-        // int ones = 0;
-        // int zeros = 0;
-        // int max_ones = 60;
-        // int max_zeros = 40;
-        // int i = 0;
-
-        // while (i < minibatch_size) {
-        //   int idx = rand() % n->data1.rows();
-        //   double label = n->data2(idx, 0);
-        //   // 
-
-        //   if (label == 1) {
-        //     n->outputs()[0]->data1.row(i) = n->data1.row(idx);
-        //     n->outputs()[1]->data2(i, 0) = 1;
-        //     ones++;
-        //   } else if (label == 0) {
-        //     n->outputs()[0]->data1.row(i) = n->data1.row(idx);
-        //     n->outputs()[1]->data2(i, 0) = 0;
-        //     zeros++;
-        //   }
-
-        //   i = ones + zeros;
-        // }
-
-        /* END DELETE THIS */
       }
 
       uint32_t minibatch_size = 100;
-      n->outputs()[0]->data1 = MatrixXd::Zero(minibatch_size, n->data1.cols());
-      n->outputs()[1]->data2 = MatrixXd::Zero(minibatch_size, 1);
+      n->outputs()[0]->fwd_input = MatrixXd::Zero(minibatch_size, n->fwd_input.cols());
+      n->outputs()[1]->fwd_data = MatrixXd::Zero(minibatch_size, 1);
       
       int ones = 0;
       int zeros = 0;
@@ -158,41 +109,21 @@ class ReadInput {
       int i = 0;
 
       while (i < minibatch_size) {
-        int idx = rand() % n->data1.rows();
-        double label = n->data2(idx, 0);
-        // 
+        int idx = rand() % n->fwd_input.rows();
+        double label = n->fwd_data(idx, 0);
 
         if (label == 1) {
-          n->outputs()[0]->data1.row(i) = n->data1.row(idx);
-          n->outputs()[1]->data2(i, 0) = 1;
+          n->outputs()[0]->fwd_input.row(i) = n->fwd_input.row(idx);
+          n->outputs()[1]->fwd_data(i, 0) = 1;
           ones++;
         } else if (label == 0) {
-          n->outputs()[0]->data1.row(i) = n->data1.row(idx);
-          n->outputs()[1]->data2(i, 0) = 0;
+          n->outputs()[0]->fwd_input.row(i) = n->fwd_input.row(idx);
+          n->outputs()[1]->fwd_data(i, 0) = 0;
           zeros++;
         }
         
         i = ones + zeros;
       }
-
-      // cout << n->outputs()[0]->data1 << std::endl;
-
-      // uint32_t minibatch_size = 100;
-      // n->outputs()[0]->data1 = MatrixXd::Zero(minibatch_size, n->data1.cols());
-      // n->outputs()[1]->data2 = MatrixXd::Zero(minibatch_size, 1);
-      //
-      // for (uint32_t i = 0; i < minibatch_size; i++) {
-      //   int idx = rand() % n->data1.rows();
-      //   double label = n->data2(idx, 0);
-      //   n->outputs()[0]->data1.row(i) = n->data1.row(idx);
-      //   if (label == 9) {
-      //     n->outputs()[1]->data2(i, 0) = 0;  
-      //   } else {
-      //     n->outputs()[1]->data2(i, 0) = 1;
-      //   }
-      // }      
-
-
     } else {
       // Do nothing
     }
