@@ -41,6 +41,7 @@ class Node {
   void addOutEdge(Node* n);
   MatrixXd data1;
   MatrixXd data2;
+  MatrixXd data3;
  private:
   int fwd_deps_;
   int bwd_deps_;

@@ -51,7 +51,7 @@ void* Waiting(void* arg) {
   bool fwd = true;
 
   int iterations = 0;
-  while (iterations < 3001) {
+  while (iterations < 10000) {
     pthread_mutex_lock(&waiting_lock);
     while (fwd && fwd_waiting.empty()) {
       // Wait for nodes to be inserted in to the waiting queue
@@ -75,6 +75,8 @@ void* Waiting(void* arg) {
       it = fwd_ready.begin();
       while (it != fwd_ready.end()) { 
         Node *n = it->second;
+
+        // std::cout << "Running node " << n->name() << std::endl;
 
         Operation::compute(n, fwd);
 
@@ -123,6 +125,8 @@ void* Waiting(void* arg) {
     
     pthread_mutex_unlock(&waiting_lock);
   }
+
+  // std::cout << "Final weight: " << fwd_waiting["A"]->data2.transpose() << std::endl;
 }
 
 int main(int argc, char* argv[]) {
@@ -152,11 +156,11 @@ int main(int argc, char* argv[]) {
     std::cout << "Error creating pthread." << std::endl;
   }
 
-  if (pthread_join(server_thread, NULL)) {
-    // TODO(santhnm2): handle error
-    std::cout << "Error joining pthread." << std::endl;
-    return 1;
-  }
+  // if (pthread_join(server_thread, NULL)) {
+  //   // TODO(santhnm2): handle error
+  //   std::cout << "Error joining pthread." << std::endl;
+  //   return 1;
+  // }
 
   if (pthread_join(waiting_thread, NULL)) {
     // TODO(santhnm2): handle error

@@ -9,12 +9,14 @@ using Eigen::MatrixXd;
 
 class AddBias {
  public:
-  static void compute(MatrixXd &input, MatrixXd &weight, MatrixXd &output) {
-    if (weight.rows() == 0) {
-      weight = MatrixXd::Zero(input.rows(), 10);
+  static void compute(Node* n, bool fwd) {
+    if (fwd) {
+    	n->data1.conservativeResize(n->data1.rows(), n->data1.cols()+1);
+    	for (int i = 0; i < n->data1.rows(); i++) {
+    		n->data1(i, n->data1.cols()-1) = 1;
+    	}
+    	n->outputs()[0]->data1 = n->data1;
     }
-
-    output = input + weight;
   }
 };
 

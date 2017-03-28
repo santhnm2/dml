@@ -21,7 +21,7 @@ using namespace std;
 
 class ReadInput {
  public:
-  static void compute(Node *n, bool fwd) {
+  static void compute(Node* n, bool fwd) {
     if (fwd) {
       if (n->data1.rows() == 0) {
         std::cout << "Reading data..." << std::endl;
@@ -102,22 +102,97 @@ class ReadInput {
         fclose(label_file);
 
         cout << "Finished reading data" << endl;
+
+        // n->data1 = MatrixXd::Zero(4, 3);
+        // n->outputs()[0]->data1 = MatrixXd::Zero(4, 3);
+        // n->outputs()[0]->data1 << 0, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1;
+
+        // n->outputs()[1]->data2 = MatrixXd::Zero(4, 1);
+        // n->outputs()[1]->data2 << 0, 0, 1, 1;
+
+
+        // std::cout << n->outputs()[0]->data1 << std::endl << std::endl;
+        // std::cout << n->outputs()[1]->data2 << std::endl << std::endl;
+
+        /* DELETE THIS */
+
+        // uint32_t minibatch_size = 100;
+        // n->outputs()[0]->data1 = MatrixXd::Zero(minibatch_size, n->data1.cols());
+        // n->outputs()[1]->data2 = MatrixXd::Zero(minibatch_size, 1);
+        
+        // int ones = 0;
+        // int zeros = 0;
+        // int max_ones = 60;
+        // int max_zeros = 40;
+        // int i = 0;
+
+        // while (i < minibatch_size) {
+        //   int idx = rand() % n->data1.rows();
+        //   double label = n->data2(idx, 0);
+        //   // 
+
+        //   if (label == 1) {
+        //     n->outputs()[0]->data1.row(i) = n->data1.row(idx);
+        //     n->outputs()[1]->data2(i, 0) = 1;
+        //     ones++;
+        //   } else if (label == 0) {
+        //     n->outputs()[0]->data1.row(i) = n->data1.row(idx);
+        //     n->outputs()[1]->data2(i, 0) = 0;
+        //     zeros++;
+        //   }
+
+        //   i = ones + zeros;
+        // }
+
+        /* END DELETE THIS */
       }
 
       uint32_t minibatch_size = 100;
       n->outputs()[0]->data1 = MatrixXd::Zero(minibatch_size, n->data1.cols());
       n->outputs()[1]->data2 = MatrixXd::Zero(minibatch_size, 1);
       
-      for (uint32_t i = 0; i < minibatch_size; i++) {
+      int ones = 0;
+      int zeros = 0;
+      int max_ones = 60;
+      int max_zeros = 40;
+      int i = 0;
+
+      while (i < minibatch_size) {
         int idx = rand() % n->data1.rows();
         double label = n->data2(idx, 0);
-        n->outputs()[0]->data1.row(i) = n->data1.row(idx);
-        if (label == 9) {
-          n->outputs()[1]->data2(i, 0) = 1;  
-        } else {
+        // 
+
+        if (label == 1) {
+          n->outputs()[0]->data1.row(i) = n->data1.row(idx);
+          n->outputs()[1]->data2(i, 0) = 1;
+          ones++;
+        } else if (label == 0) {
+          n->outputs()[0]->data1.row(i) = n->data1.row(idx);
           n->outputs()[1]->data2(i, 0) = 0;
+          zeros++;
         }
+        
+        i = ones + zeros;
       }
+
+      // cout << n->outputs()[0]->data1 << std::endl;
+
+      // uint32_t minibatch_size = 100;
+      // n->outputs()[0]->data1 = MatrixXd::Zero(minibatch_size, n->data1.cols());
+      // n->outputs()[1]->data2 = MatrixXd::Zero(minibatch_size, 1);
+      //
+      // for (uint32_t i = 0; i < minibatch_size; i++) {
+      //   int idx = rand() % n->data1.rows();
+      //   double label = n->data2(idx, 0);
+      //   n->outputs()[0]->data1.row(i) = n->data1.row(idx);
+      //   if (label == 9) {
+      //     n->outputs()[1]->data2(i, 0) = 0;  
+      //   } else {
+      //     n->outputs()[1]->data2(i, 0) = 1;
+      //   }
+      // }      
+
+
     } else {
       // Do nothing
     }

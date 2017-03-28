@@ -94,7 +94,7 @@ void Node::addInEdge(Node* n) {
   inputs_.push_back(n);
 }
 
-void Node::addOutEdge(Node *n) {
+void Node::addOutEdge(Node* n) {
   outputs_.push_back(n);
 }
 
