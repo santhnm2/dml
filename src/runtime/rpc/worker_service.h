@@ -21,12 +21,12 @@ using grpc::ServerBuilder;
 using grpc::ServerContext;
 using grpc::ServerCompletionQueue;
 using grpc::Status;
-using dml::InitNodeRequest;
-using dml::InitNodeResponse;
+using dml::InitRequest;
+using dml::InitResponse;
 using dml::NodeDef;
 using dml::Worker;
 
-extern GraphManager graph_mgr;
+extern int iterations;
 extern pthread_mutex_t waiting_lock;
 extern pthread_cond_t waiting_cv;
 extern std::unordered_map<std::string, Node*> fwd_waiting;
@@ -34,9 +34,8 @@ extern std::unordered_map<std::string, Node*> fwd_ready;
 extern std::unordered_map<std::string, Node*> bwd;
 
 class WorkerServiceImpl : public Worker::Service {
-  Status InitNode(ServerContext* context, const InitNodeRequest* request,
-                  InitNodeResponse* response) override {
-    // std::cout << "InitNode:entry" << std::endl;
+  Status Init(ServerContext* context, const InitRequest* request,
+                  InitResponse* response) override {
     GraphManager graph_mgr;
     pthread_mutex_lock(&waiting_lock);
     for (NodeDef def : request->def()) {
@@ -45,11 +44,9 @@ class WorkerServiceImpl : public Worker::Service {
       graph_mgr.addNode(n);
 
       fwd_waiting.insert({n->name(), n});
-
-      // DEBUG
-      // std::cout << "Added node " << n->name() << " to fwd_waiting."
-      // << std::endl;
     }
+
+    iterations = request->iterations();
 
     graph_mgr.connectNodes();
 

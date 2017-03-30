@@ -11,20 +11,20 @@ using Eigen::MatrixXd;
 using dml::NodeDef;
 
 Node::Node(NodeDef def) {
-  def.name() == "-" ? name_ = "" : name_ = def.name();
+  name_ = def.name();
 
-  def.op() == "-" ? op_ = "" : op_ = def.op();
+  op_ = def.op();
 
-  def.inputs() == "-" ? inputs_str_ = "" : inputs_str_ = def.inputs();
+  for (auto input : def.input()) {
+    input_names_.push_back(input);
+  }
 
-  def.outputs() == "-" ? outputs_str_ = "" : outputs_str_ = def.outputs();
+  for (auto output: def.output()) {
+    output_names_.push_back(output);
+  }
 
-  input_names_ = parse(inputs_str_, ":");
-  output_names_ = parse(outputs_str_, ":");
-  
   fwd_deps_ = input_names_.size();
   bwd_deps_ = 0;
-
 }
 
 std::string Node::name() const {
@@ -95,17 +95,15 @@ NodeDef Node::def() {
   NodeDef def;
   def.set_name(name_);
   def.set_op(op_);
-  def.set_inputs(inputs_str_);
-  def.set_outputs(outputs_str_);
-  return def;
-}
 
-NodeDef* Node::allocated_def() {
-  NodeDef *def = new NodeDef();
-  def->set_name(name_);
-  def->set_op(op_);
-  def->set_inputs(inputs_str_);
-  def->set_outputs(outputs_str_);
+  for (auto input : input_names_) {
+    def.add_input(input);
+  }
+
+  for (auto output : output_names_) {
+    def.add_output(output);
+  }
+
   return def;
 }
 

@@ -16,8 +16,8 @@ using grpc::ClientAsyncResponseReader;
 using grpc::ClientContext;
 using grpc::CompletionQueue;
 using grpc::Status;
-using dml::InitNodeRequest;
-using dml::InitNodeResponse;
+using dml::InitRequest;
+using dml::InitResponse;
 using dml::NodeDef;
 using dml::Worker;
 
@@ -26,19 +26,21 @@ class MasterClient {
   MasterClient(std::shared_ptr<Channel> channel)
       : stub_(Worker::NewStub(channel)) {}
 
-  std::string InitNode(std::vector<NodeDef> defs) {
-    InitNodeRequest request;
+  std::string Init(std::vector<NodeDef> defs, int iterations) {
+    InitRequest request;
 
     for (NodeDef def : defs) {
       NodeDef* def_empty = request.add_def();
       def_empty->CopyFrom(def);
     }
 
-    InitNodeResponse response;
+    request.set_iterations(iterations);
+
+    InitResponse response;
 
     ClientContext context;
 
-    Status status = stub_->InitNode(&context, request, &response);
+    Status status = stub_->Init(&context, request, &response);
 
     if (status.ok()) {
       // TODO(santhnm2): define behavior on success

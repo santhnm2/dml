@@ -21,9 +21,13 @@ class GraphManager {
   void connectNodes();
   Node* getNode(std::string name);
   int size();
+  int iterations();
+  double stepSize();
 
  private:
   std::map<std::string, Node*> graph_;
+  int iterations_;
+  double step_size_;
 };
 
 #endif // RUNTIME_DEVICE_MANAGER_H

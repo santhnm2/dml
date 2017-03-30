@@ -5,13 +5,14 @@ package dml;
 import "node_def.proto";
 
 service Worker {
-  rpc InitNode (InitNodeRequest) returns (InitNodeResponse) {}
+  rpc Init (InitRequest) returns (InitResponse) {}
 }
 
-message InitNodeRequest {
+message InitRequest {
   repeated NodeDef def = 1;
+  int32 iterations = 2;
 }
 
-message InitNodeResponse {
+message InitResponse {
   string message = 1;
 }

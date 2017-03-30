@@ -3,38 +3,38 @@
 #include <string>
 #include <vector>
 
+#include "json.hpp"
 #include "rpc/protos/node_def.pb.h"
 #include "graph_mgr.h"
 
 using dml::NodeDef;
+using json = nlohmann::json;
 
 GraphManager::GraphManager() {
 
 }
 
-
 GraphManager::GraphManager(const std::string filename) {
-  std::ifstream graph_spec(filename.c_str(), std::ifstream::in);
-  std::string name;
-  std::string op;
-  std::string inputs;
-  std::string outputs;
-  std::string newline;
+  std::ifstream f(filename.c_str(), std::ifstream::in);
+  json graph_spec;
+  f >> graph_spec;
 
-  if (graph_spec.is_open()) {
-    while (getline(graph_spec, name) && getline(graph_spec, op) &&
-           getline(graph_spec, inputs) && getline(graph_spec, outputs)) {
-      NodeDef def;
-      def.set_name(name);
-      def.set_op(op);
-      def.set_inputs(inputs);
-      def.set_outputs(outputs);
-      Node* n = new Node(def);
-      addNode(n);
-      getline(graph_spec, newline);
+  for (auto it = graph_spec["graph"].begin(); it != graph_spec["graph"].end();
+       it++) {
+    NodeDef def;
+    def.set_name(it.key());
+    def.set_op(it.value()["op"]);
+    for (auto input : it.value()["inputs"]) {
+      def.add_input(input);
     }
-    graph_spec.close();
+    for (auto output : it.value()["outputs"]) {
+      def.add_output(output);
+    }
+    Node *n = new Node(def);
+    addNode(n);
   }
+  
+  iterations_ = graph_spec["iterations"];
 }
 
 void GraphManager::eraseGraph() {
@@ -80,4 +80,8 @@ std::vector<NodeDef> GraphManager::graphDef() {
   }
 
   return graphDef;
+}
+
+int GraphManager::iterations() {
+  return iterations_;
 }

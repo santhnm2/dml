@@ -7,7 +7,7 @@ message NodeDef {
   
   string op = 2;
 
-  string inputs = 3;
+  repeated string input = 3;
 
-  string outputs = 4;
+  repeated string output = 4;
 }

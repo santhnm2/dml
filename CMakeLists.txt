@@ -11,6 +11,7 @@ set(EXECUTABLE_OUTPUT_PATH ${CMAKE_BINARY_DIR})
 
 include_directories(/usr/local/include)
 include_directories(third_party/eigen3)
+include_directories(third_party/json/src)
 link_directories(/usr/local/lib)
 
 add_subdirectory(src/runtime/rpc/protos)

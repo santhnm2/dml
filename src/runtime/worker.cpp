@@ -24,6 +24,8 @@ std::unordered_map<std::string, Node*> fwd_waiting;
 std::unordered_map<std::string, Node*> fwd_ready;
 std::unordered_map<std::string, Node*> bwd;
 
+int iterations = 1000;
+
 void* RunServer(void* arg) {
   std::string server_address((char*) arg);
 
@@ -41,17 +43,25 @@ void* RunServer(void* arg) {
   server->Wait();
 }
 
-// Wait cycle
-// 1) Wake up
-// 2) Move everything with dependencies == 0 to running queue
-// 3) Run everything in running queue and remove dependencies
-// 4) Move everything in running queue to backward queue
+// TODO(santhnm2): Document this better
+// Control flow:
+// If forward:
+//  Move every node in waiting queue with dependencies == 0 to ready queue
+//  Run every node in ready queue and remove dependencies
+//  Move every node in ready queue to backward queue
+//  If every node is in backward queue:
+//    forward = false
+// Else:
+//  Run every node in backward queue and remove dependencies
+//  Move every node in backward queue to waiting queue
+//  If every node is in waiting queue:
+//    forward = true
 
 void* Waiting(void* arg) {
   bool fwd = true;
 
-  int iterations = 0;
-  while (iterations < 1000) {
+  int cur_iter = 0;
+  while (cur_iter < iterations) {
     pthread_mutex_lock(&waiting_lock);
     while (fwd && fwd_waiting.empty()) {
       // Wait for nodes to be inserted in to the waiting queue
@@ -73,10 +83,8 @@ void* Waiting(void* arg) {
 
       // Run all nodes in the ready queue
       it = fwd_ready.begin();
-      while (it != fwd_ready.end()) { 
+      while (it != fwd_ready.end()) {
         Node *n = it->second;
-
-        // std::cout << "Running node " << n->name() << std::endl;
 
         Operation::compute(n, fwd);
 
@@ -92,7 +100,7 @@ void* Waiting(void* arg) {
         it = fwd_ready.erase(it);
 
         if (fwd_waiting.empty() && fwd_ready.empty()) {
-          std::cout << "Iteration " << iterations + 1 << ": ";
+          std::cout << "Iteration " << cur_iter + 1 << ": ";
           fwd = false;
         }
       } 
@@ -101,8 +109,6 @@ void* Waiting(void* arg) {
       while (it != bwd.end()) {
         Node *n = it->second;
         if (n->getBackwardDependencies() == 0) {
-          // std::cout << "Running node " << n->name() << std::endl;
-
           Operation::compute(n, fwd);
 
           for (auto input_name : n->input_names()) {
@@ -120,20 +126,16 @@ void* Waiting(void* arg) {
 
         if (bwd.size() == 0) {
           fwd = true;
-          iterations++;
+          cur_iter++;
         }
       }
     }
     
     pthread_mutex_unlock(&waiting_lock);
   }
-
-  // std::cout << "Final weight: " << fwd_waiting["A"]->data2.transpose() << std::endl;
 }
 
 int main(int argc, char* argv[]) {
-  // TODO(santhnm2): implement check of ready queues and execution
-
   if (argc != 3) {
     std::cout << "Usage: ./worker [device_list_file] [server address]"
     << std::endl;

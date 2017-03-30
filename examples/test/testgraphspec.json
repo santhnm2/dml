@@ -1,0 +1,25 @@
+{
+	"graph": {
+		"source" : {
+			"op": "input",
+			"inputs": [],
+			"outputs": ["W1", "error"]
+		},
+		"W1" : {
+			"op": "weight",
+			"inputs": ["source"],
+			"outputs": ["A1"]
+		}, 
+		"A1" : {
+			"op": "sigmoid",
+			"inputs": ["W1"],
+			"outputs": ["error"]
+		},
+		"error" : {
+			"op": "error",
+			"inputs": ["source", "A1"],
+			"outputs": []
+		}
+	},
+	"iterations": 1000
+}

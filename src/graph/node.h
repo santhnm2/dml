@@ -24,7 +24,6 @@ class Node {
   Device device() const;
   void setDevice(Device d);
   NodeDef def();
-  NodeDef* allocated_def();
   int getForwardDependencies();
   void setForwardDependencies(int deps);
   int getBackwardDependencies();
@@ -45,8 +44,6 @@ class Node {
   int bwd_deps_;
   std::string name_;
   std::string op_;
-  std::string inputs_str_;
-  std::string outputs_str_;
   std::vector<std::string> input_names_;
   std::vector<std::string> output_names_;
   std::vector<Node*> inputs_;

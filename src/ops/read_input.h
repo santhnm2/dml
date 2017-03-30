@@ -99,7 +99,8 @@ class ReadInput {
       }
 
       uint32_t minibatch_size = 100;
-      n->outputs()[0]->fwd_input = MatrixXd::Zero(minibatch_size, n->fwd_input.cols());
+      n->outputs()[0]->fwd_input = MatrixXd::Zero(minibatch_size,
+                                                  n->fwd_input.cols());
       n->outputs()[1]->fwd_data = MatrixXd::Zero(minibatch_size, 1);
       
       int ones = 0;

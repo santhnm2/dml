@@ -19,7 +19,7 @@ class ApplyWeight {
 
         for (int i = 0; i < n->fwd_data.rows(); i++) {
           for (int j = 0; j < n->fwd_data.cols(); j++) {
-            n->fwd_data(i, j) = 2 * static_cast <float> (rand()) / 
+            n->fwd_data(i, j) = 2 * static_cast <float> (rand()) /
                                 static_cast <float> (RAND_MAX) - 1;
           }
         }
