@@ -30,6 +30,8 @@ GraphManager::GraphManager(const std::string filename) {
     for (auto output : it.value()["outputs"]) {
       def.add_output(output);
     }
+
+    def.set_args(it.value()["args"].dump());
     Node *n = new Node(def);
     addNode(n);
   }

@@ -132,7 +132,7 @@ void* Waiting(void* arg) {
     }
     
     pthread_mutex_unlock(&waiting_lock);
-  }
+  } 
 }
 
 int main(int argc, char* argv[]) {

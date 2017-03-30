@@ -21,6 +21,7 @@ class Node {
   std::vector<std::string> output_names() const;
   std::vector<Node*> inputs();
   std::vector<Node*> outputs();
+  std::string args() const;
   Device device() const;
   void setDevice(Device d);
   NodeDef def();
@@ -48,6 +49,7 @@ class Node {
   std::vector<std::string> output_names_;
   std::vector<Node*> inputs_;
   std::vector<Node*> outputs_;
+  std::string args_;
   Device device_;
   MatrixXd input_;
   MatrixXd weight_;

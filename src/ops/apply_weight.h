@@ -5,9 +5,12 @@
 
 #include "../graph/node.h"
 
+#include "json.hpp"
+
 #include <Eigen/Dense>
 
 using Eigen::MatrixXd;
+using json = nlohmann::json;
 
 class ApplyWeight {
  public:
@@ -15,7 +18,11 @@ class ApplyWeight {
   	if (fwd) {
   		if (n->fwd_data.rows() == 0) {
     		// Initialize weight
-    		n->fwd_data = MatrixXd::Zero(n->fwd_input.cols(), 1);
+        json args = json::parse(n->args());
+        int rows = args["shape"][0];
+        int cols = args["shape"][1];
+
+    		n->fwd_data = MatrixXd::Zero(rows, cols);
 
         for (int i = 0; i < n->fwd_data.rows(); i++) {
           for (int j = 0; j < n->fwd_data.cols(); j++) {

@@ -11,21 +11,35 @@
 			"inputs": ["source"],
 			"outputs": ["A1"],
 			"args": {
-				"shape": [784, 1]
+				"shape": [3, 4]
 			}
 		}, 
 		"A1" : {
 			"op": "sigmoid",
 			"inputs": ["W1"],
+			"outputs": ["W2"],
+			"args": {}
+		},
+		"W2" : {
+			"op": "weight",
+			"inputs": ["A1"],
+			"outputs": ["A2"],
+			"args": {
+				"shape": [4, 1]
+			}
+		}, 
+		"A2" : {
+			"op": "sigmoid",
+			"inputs": ["W2"],
 			"outputs": ["error"],
 			"args": {}
 		},
 		"error" : {
 			"op": "error",
-			"inputs": ["source", "A1"],
+			"inputs": ["source", "A2"],
 			"outputs": [],
 			"args": {}
 		}
 	},
-	"iterations": 1000
+	"iterations": 60000
 }

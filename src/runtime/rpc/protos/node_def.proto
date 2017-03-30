@@ -10,4 +10,6 @@ message NodeDef {
   repeated string input = 3;
 
   repeated string output = 4;
+
+  string args = 5;
 }

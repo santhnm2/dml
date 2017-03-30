@@ -96,6 +96,18 @@ class ReadInput {
         fclose(label_file);
 
         cout << "Finished reading data" << endl;
+
+        /*
+         * Source: https://iamtrask.github.io/2015/07/12/basic-python-network/
+         * n->fwd_input = MatrixXd::Zero(4,3);
+         * n->fwd_data = MatrixXd::Zero(4,1);
+         *
+         * n->fwd_input << 0, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1;
+         * n->fwd_data << 0, 1, 1, 0;
+         *
+         * n->outputs()[0]->fwd_input = n->fwd_input;
+         * n->outputs()[1]->fwd_data = n->fwd_data;
+         */
       }
 
       uint32_t minibatch_size = 100;

@@ -23,6 +23,8 @@ Node::Node(NodeDef def) {
     output_names_.push_back(output);
   }
 
+  args_ = def.args();
+
   fwd_deps_ = input_names_.size();
   bwd_deps_ = 0;
 }
@@ -49,6 +51,10 @@ std::vector<std::string> Node::input_names() const {
 
 std::vector<std::string> Node::output_names() const {
   return output_names_;
+}
+
+std::string Node::args() const {
+  return args_;
 }
 
 Device Node::device() const {
@@ -103,6 +109,8 @@ NodeDef Node::def() {
   for (auto output : output_names_) {
     def.add_output(output);
   }
+
+  def.set_args(args_);
 
   return def;
 }
