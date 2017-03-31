@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package dml;
+
+import "weight.proto";
+
+service PS {
+  rpc Push (PushRequest) returns (PushResponse) {}
+  rpc Pull (PullRequest) returns (PullResponse) {}
+}
+
+message PushRequest {
+  Weight w = 1; 
+}
+
+message PushResponse {
+  string message = 1;
+}
+
+message PullRequest {
+  string name = 1;
+}
+
+message PullResponse {
+  Weight w = 1;
+}

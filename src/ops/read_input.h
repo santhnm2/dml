@@ -84,58 +84,42 @@ class ReadInput {
           return;
         }
 
-        n->fwd_data = MatrixXd::Zero(images, 1);
+        n->fwd_data = MatrixXd::Zero(images, 10);
 
         uint8_t label;
 
         for (int i = 0; i < images; i++) {
           fread(&label, sizeof(uint8_t), 1, label_file);
-          n->fwd_data(i, 0) = label;
+          n->fwd_data(i, label) = 1;
         }
 
         fclose(label_file);
 
         cout << "Finished reading data" << endl;
 
-        /*
-         * Source: https://iamtrask.github.io/2015/07/12/basic-python-network/
-         * n->fwd_input = MatrixXd::Zero(4,3);
-         * n->fwd_data = MatrixXd::Zero(4,1);
-         *
-         * n->fwd_input << 0, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1;
-         * n->fwd_data << 0, 1, 1, 0;
-         *
-         * n->outputs()[0]->fwd_input = n->fwd_input;
-         * n->outputs()[1]->fwd_data = n->fwd_data;
-         */
+        
+         // // Source: https://iamtrask.github.io/2015/07/12/basic-python-network/
+         // n->fwd_input = MatrixXd::Zero(4,3);
+         // n->fwd_data = MatrixXd::Zero(4,1);
+         
+         // n->fwd_input << 0, 0, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1;
+         // n->fwd_data << 0, 1, 1, 0;
+         
+         // n->outputs()[0]->fwd_input = n->fwd_input;
+         // n->outputs()[1]->fwd_data = n->fwd_data;
+         
       }
 
       uint32_t minibatch_size = 100;
       n->outputs()[0]->fwd_input = MatrixXd::Zero(minibatch_size,
                                                   n->fwd_input.cols());
-      n->outputs()[1]->fwd_data = MatrixXd::Zero(minibatch_size, 1);
+      n->outputs()[1]->fwd_data = MatrixXd::Zero(minibatch_size, 10);
       
-      int ones = 0;
-      int zeros = 0;
-      int max_ones = 60;
-      int max_zeros = 40;
-      int i = 0;
-
-      while (i < minibatch_size) {
+      for (int i = 0; i < minibatch_size; i++) {
         int idx = rand() % n->fwd_input.rows();
-        double label = n->fwd_data(idx, 0);
-
-        if (label == 1) {
-          n->outputs()[0]->fwd_input.row(i) = n->fwd_input.row(idx);
-          n->outputs()[1]->fwd_data(i, 0) = 1;
-          ones++;
-        } else if (label == 0) {
-          n->outputs()[0]->fwd_input.row(i) = n->fwd_input.row(idx);
-          n->outputs()[1]->fwd_data(i, 0) = 0;
-          zeros++;
-        }
         
-        i = ones + zeros;
+        n->outputs()[0]->fwd_input.row(i) = n->fwd_input.row(idx);
+        n->outputs()[1]->fwd_data.row(i) = n->fwd_data.row(idx);
       }
     } else {
       // Do nothing

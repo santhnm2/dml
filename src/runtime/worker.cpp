@@ -100,7 +100,7 @@ void* Waiting(void* arg) {
         it = fwd_ready.erase(it);
 
         if (fwd_waiting.empty() && fwd_ready.empty()) {
-          std::cout << "Iteration " << cur_iter + 1 << ": ";
+          std::cout << std::endl << "Iteration " << cur_iter + 1 << ": " << std::endl;
           fwd = false;
         }
       } 
@@ -132,7 +132,7 @@ void* Waiting(void* arg) {
     }
     
     pthread_mutex_unlock(&waiting_lock);
-  } 
+  }
 }
 
 int main(int argc, char* argv[]) {

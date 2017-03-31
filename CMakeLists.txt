@@ -17,15 +17,20 @@ link_directories(/usr/local/lib)
 add_subdirectory(src/runtime/rpc/protos)
 
 set_source_files_properties(${CMAKE_SOURCE_DIR}/runtime/rpc/protos/node_def.pb.cc 
+			 ${CMAKE_SOURCE_DIR}/runtime/rpc/protos/weight.pb.cc
+			 ${CMAKE_SOURCE_DIR}/runtime/rpc/protos/ps.pb.cc
+			 ${CMAKE_SOURCE_DIR}/runtime/rpc/protos/ps.grpc.pb.cc
 			 ${CMAKE_SOURCE_DIR}/runtime/rpc/protos/worker_service.pb.cc
 			 ${CMAKE_SOURCE_DIR}/runtime/rpc/protos/worker_service.grpc.pb.cc
                             PROPERTIES GENERATED TRUE)
 
 set (SOURCES ${CMAKE_SOURCE_DIR}/runtime/graph_mgr.cpp 
 			 ${CMAKE_SOURCE_DIR}/runtime/device_mgr.cpp 
-			 # ${CMAKE_SOURCE_DIR}/runtime/partitioner.cpp
 			 ${CMAKE_SOURCE_DIR}/graph/node.cpp 
-			 ${CMAKE_SOURCE_DIR}/runtime/rpc/protos/node_def.pb.cc 
+			 ${CMAKE_SOURCE_DIR}/runtime/rpc/protos/node_def.pb.cc
+			 ${CMAKE_SOURCE_DIR}/runtime/rpc/protos/weight.pb.cc
+			 ${CMAKE_SOURCE_DIR}/runtime/rpc/protos/ps.pb.cc
+			 ${CMAKE_SOURCE_DIR}/runtime/rpc/protos/ps.grpc.pb.cc
 			 ${CMAKE_SOURCE_DIR}/runtime/rpc/protos/worker_service.pb.cc
 			 ${CMAKE_SOURCE_DIR}/runtime/rpc/protos/worker_service.grpc.pb.cc)
 add_executable(master ${CMAKE_SOURCE_DIR}/runtime/master.cpp ${SOURCES})

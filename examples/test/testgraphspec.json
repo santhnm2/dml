@@ -11,7 +11,8 @@
 			"inputs": ["source"],
 			"outputs": ["A1"],
 			"args": {
-				"shape": [784, 1]
+				"shape": [784, 10],
+				"step_size": 0.15
 			}
 		}, 
 		"A1" : {

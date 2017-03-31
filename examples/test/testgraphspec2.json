@@ -11,7 +11,8 @@
 			"inputs": ["source"],
 			"outputs": ["A1"],
 			"args": {
-				"shape": [3, 4]
+				"shape": [784, 100],
+				"step_size": 0.01
 			}
 		}, 
 		"A1" : {
@@ -25,7 +26,8 @@
 			"inputs": ["A1"],
 			"outputs": ["A2"],
 			"args": {
-				"shape": [4, 1]
+				"shape": [100, 10],
+				"step_size": 0.01
 			}
 		}, 
 		"A2" : {
@@ -41,5 +43,5 @@
 			"args": {}
 		}
 	},
-	"iterations": 60000
+	"iterations": 1000
 }

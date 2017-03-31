@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package dml;
+
+message Weight {
+  string name = 1;
+
+  uint32 rows = 2;
+  uint32 cols = 3;
+  repeated double data = 4 [packed=true];
+}

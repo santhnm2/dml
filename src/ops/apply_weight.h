@@ -15,10 +15,10 @@ using json = nlohmann::json;
 class ApplyWeight {
  public:
   static void compute(Node* n, bool fwd) {
-  	if (fwd) {
+  	json args = json::parse(n->args());
+    if (fwd) {
   		if (n->fwd_data.rows() == 0) {
     		// Initialize weight
-        json args = json::parse(n->args());
         int rows = args["shape"][0];
         int cols = args["shape"][1];
 
@@ -35,8 +35,9 @@ class ApplyWeight {
     } else {
       n->bwd = n->outputs()[0]->bwd * n->fwd_data.transpose();
 
+      double step_size = args["step_size"];
       MatrixXd gradient = n->fwd_input.transpose() * n->outputs()[0]->bwd;
-      n->fwd_data += gradient;
+      n->fwd_data += step_size * gradient;
     }
   }
 };
