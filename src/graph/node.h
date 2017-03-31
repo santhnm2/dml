@@ -51,9 +51,6 @@ class Node {
   std::vector<Node*> outputs_;
   std::string args_;
   Device device_;
-  MatrixXd input_;
-  MatrixXd weight_;
-  MatrixXd output_;
 };
 
 #endif // GRAPH_NODE_H
