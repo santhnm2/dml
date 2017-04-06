@@ -22,7 +22,8 @@ set (DOWNLOAD_LOCATION "${CMAKE_CURRENT_BINARY_DIR}/downloads"
 mark_as_advanced(DOWNLOAD_LOCATION)
 
 # external dependencies
-include(zlib)
+#include(zlib)
+
 include(protobuf)
 include(grpc)
 include(eigen)

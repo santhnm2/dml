@@ -47,10 +47,8 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS}   -std=c11")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 
-if(WIN32)
-  add_definitions(-D_WIN32_WINNT=0x0A00)
-  find_package(ZLIB REQUIRED)
-endif(WIN32)
+find_package(ZLIB REQUIRED)
+find_package(OPENSSL REQUIRED)
 
 add_library(gpr
     src/core/lib/profiling/basic_timers.c
@@ -104,6 +102,7 @@ target_include_directories(gpr
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include
     PRIVATE ${PROTOBUF_INCLUDE_DIRS}
     PRIVATE ${ZLIB_INCLUDE_DIRS}
+    PRIVATE ${OPENSSL_INCLUDE_DIR}
     )
 
 add_library(grpc_unsecure
@@ -307,10 +306,13 @@ target_include_directories(grpc_unsecure
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include
     PRIVATE ${PROTOBUF_ROOT_DIR}/src
     PRIVATE ${ZLIB_INCLUDE_DIRS}
+    PRIVATE ${OPENSSL_INCLUDE_DIR}
     )
 
 target_link_libraries(grpc_unsecure
     gpr
+    ${ZLIB_LIBRARIES}
+    ${OPENSSL_LIBRARIES}
     )
 
 add_library(grpc++_unsecure
@@ -357,12 +359,15 @@ target_include_directories(grpc++_unsecure
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include
     PRIVATE ${PROTOBUF_INCLUDE_DIRS}
     PRIVATE ${ZLIB_INCLUDE_DIRS}
+    PRIVATE ${OPENSSL_INCLUDE_DIR}
     )
 
 target_link_libraries(grpc++_unsecure
     ${PROTOBUF_LIBRARIES}
     gpr
     grpc_unsecure
+    ${ZLIB_LIBRARIES}
+    ${OPENSSL_LIBRARIES}
     )
 
 add_library(grpc_plugin_support
@@ -379,11 +384,14 @@ target_include_directories(grpc_plugin_support
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include
     PRIVATE ${PROTOBUF_INCLUDE_DIRS}
     PRIVATE ${ZLIB_INCLUDE_DIRS}
+    PRIVATE ${OPENSSL_INCLUDE_DIR}
     )
 
 target_link_libraries(grpc_plugin_support
     ${PROTOBUF_LIBRARIES}
     ${PROTOBUF_PROTOC_LIBRARIES}
+    ${ZLIB_LIBRARIES}
+    ${OPENSSL_LIBRARIES}
     )
 
 add_executable(grpc_cpp_plugin
@@ -395,10 +403,13 @@ target_include_directories(grpc_cpp_plugin
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include
     PRIVATE ${PROTOBUF_INCLUDE_DIRS}
     PRIVATE ${ZLIB_INCLUDE_DIRS}
+    PRIVATE ${OPENSSL_INCLUDE_DIR}
     )
 
 target_link_libraries(grpc_cpp_plugin
     ${PROTOBUF_LIBRARIES}
     ${PROTOBUF_PROTOC_LIBRARIES}
     grpc_plugin_support
+    ${ZLIB_LIBRARIES}
+    ${OPENSSL_LIBRARIES}
     )

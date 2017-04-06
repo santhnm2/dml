@@ -20,7 +20,7 @@ endif()
 
 ExternalProject_Add(grpc
     PREFIX grpc
-    DEPENDS protobuf zlib
+    DEPENDS protobuf
     GIT_REPOSITORY ${GRPC_URL}
     GIT_TAG ${GRPC_TAG}
     DOWNLOAD_DIR "${DOWNLOAD_LOCATION}"
@@ -33,8 +33,6 @@ ExternalProject_Add(grpc
     -DPROTOBUF_INCLUDE_DIRS:STRING=${PROTOBUF_INCLUDE_DIRS}
     -DPROTOBUF_LIBRARIES:STRING=${protobuf_STATIC_LIBRARIES}
     -DPROTOBUF_PROTOC_LIBRARIES:STRING=${protobuf_PROTOC_STATIC_LIBRARIES}
-    -DZLIB_ROOT:STRING=${ZLIB_INSTALL}
-        -DZLIB_INCLUDE_DIRS:STRING=${zlib_INCLUDE_DIR}
     )
 
 function(dml_protobuf_grpc_generate_cpp output_dir srcs_var hdrs_var work_path proto_path)

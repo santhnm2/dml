@@ -7,7 +7,7 @@ gRPC: http://www.grpc.io/docs/quickstart/cpp.html
 
 ```
 sudo apt-get update && sudo apt-get install build-essential git autoconf libtool
-sudo apt-get install libopenblas-dev
+sudo apt-get install libopenblas-dev zlib1g-dev libssl 
 ```
 
 TODO:
