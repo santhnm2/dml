@@ -88,7 +88,7 @@ macro(add_dml_executable NAME)
 	add_executable(${NAME} ${ARGN})
 #	target_link_libraries(${NAME} dml)
 	target_link_libraries(${NAME} ${dml_EXTERNAL_LIBRARIES})
-#	add_dependencies(${NAME} dml)
+	add_dependencies(${NAME} dml_EXTERNAL_DEPENDENCIES)
 	requires_eigen(${NAME})
 endmacro(add_dml_executable)
 
