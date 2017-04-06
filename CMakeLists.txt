@@ -29,12 +29,12 @@ include(grpc)
 include(eigen)
 
 set(dml_EXTERNAL_LIBRARIES
-		${zlib_STATIC_LIBRARIES}
+#		${zlib_STATIC_LIBRARIES}
 		${protobuf_STATIC_LIBRARIES}
 		${grpc_STATIC_LIBRARIES}
 		)
 set(dml_EXTERNAL_DEPENDENCIES
-		zlib_copy_headers_to_destination
+#		zlib_copy_headers_to_destination
 		protobuf
 		grpc
 		eigen
@@ -50,7 +50,7 @@ list(APPEND DML_INCLUDE_LIST "${PROJECT_SOURCE_DIR}/include")
 
 #list(APPEND DML_INCLUDE_LIST "${PROJECT_SOURCE_DIR}/include/third_party/json")
 
-list(APPEND DML_INCLUDE_LIST ${zlib_INCLUDE_DIR})
+#list(APPEND DML_INCLUDE_LIST ${zlib_INCLUDE_DIR})
 list(APPEND DML_INCLUDE_LIST ${PROTOBUF_INCLUDE_DIRS})
 list(APPEND DML_INCLUDE_LIST ${GRPC_INCLUDE_DIRS})
 list(APPEND DML_INCLUDE_LIST ${EIGEN_INSTALL})
