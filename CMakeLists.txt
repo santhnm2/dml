@@ -3,6 +3,8 @@ project(dml)
 
 find_package(Threads REQUIRED)
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -pthread")
+#set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -std=c99")
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
 
 file(MAKE_DIRECTORY ${PROJECT_SOURCE_DIR}/build)
 set(CMAKE_BINARY_DIR ${PROJECT_SOURCE_DIR}/build)
@@ -72,7 +74,7 @@ list(APPEND SOURCE ${proto_srcs})
 list(APPEND SOURCE ${grpc_proto_srcs})
 
 list(APPEND DML_INCLUDE_LIST ${CMAKE_CURRENT_BINARY_DIR})
-include_directories(BEFORE DML_INCLUDE_LIST)
+include_directories(${DML_INCLUDE_LIST})
 
 list(APPEND SOURCE ${proto_srcs})
 list(APPEND SOURCE ${grpc_proto_srcs})
@@ -88,5 +90,5 @@ macro(add_dml_executable NAME)
 	requires_eigen(${NAME})
 endmacro(add_dml_executable)
 
-add_dml_executable(master src/agent/master.cpp)
-add_dml_executable(worker src/agent/worker.cpp)
+add_dml_executable(master src/agent/master.cpp ${SOURCE})
+add_dml_executable(worker src/agent/worker.cpp ${SOURCE})

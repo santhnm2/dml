@@ -7,7 +7,7 @@
 
 #include <grpc++/grpc++.h>
 
-#include "agent/node.h"
+#include "graph/node.h"
 #include "node_def.pb.h"
 #include "worker_service_grpc.grpc.pb.h"
 

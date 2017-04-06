@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-#include "node.h"
+#include "graph/node.h"
 
 #include <byteswap.h>
 #include <stdlib.h>

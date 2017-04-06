@@ -5,7 +5,7 @@
 
 #include <iostream>
 
-#include "node.h"
+#include "graph/node.h"
 
 #include <Eigen/Dense>
 
