@@ -21,22 +21,7 @@ class Error {
         n->bwd = MatrixXd::Zero(n->fwd_input.rows(), n->fwd_input.cols());
       }
 
-      // std::cout << n->fwd_input << std::endl;
-
-
-      // for (int i = 0; i < n->bwd.rows(); i++) {
-      //   for (int j = 0; j < n->bwd.cols(); j++) {
-          n->bwd = n->fwd_data - n->fwd_input;
-      //   }
-      // }
-
-      // double loss = 0.0;
-      // for (int i = 0; i < n->bwd.rows(); i++) {
-      //   for (int j = 0; j < n->bwd.cols(); j++) {
-      //     loss += (n->bwd(i, j) * n->bwd(i, j));  
-      //   }
-      // }
-      // loss /= 2.0;
+      n->bwd = n->fwd_data - n->fwd_input;
       
       int correct = 0;
       int incorrect = 0;
@@ -57,16 +42,13 @@ class Error {
         }
 
         if (pred_idx == label_idx) {
-          // std::cout << "Correct!" << std::endl;
           correct++;
         } else {
-          // std::cout << "Predicted " << pred_idx << " but correct answer was " << label_idx << std::endl;
           incorrect++;
         }
 
       }
       std::cout << correct << " correct predictions, " << incorrect << " incorrect predictions" << std::endl;
-      // std::cout << "Loss = " << loss << std::endl;
     }
   }
 };
