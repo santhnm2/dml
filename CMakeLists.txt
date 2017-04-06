@@ -35,8 +35,8 @@ set(dml_EXTERNAL_LIBRARIES
 set(dml_EXTERNAL_DEPENDENCIES
 		zlib_copy_headers_to_destination
 		protobuf
-		eigen
 		grpc
+		eigen
 		)
 
 set(DML_INCLUDE_LIST "")
@@ -52,6 +52,7 @@ list(APPEND DML_INCLUDE_LIST "${PROJECT_SOURCE_DIR}/include")
 list(APPEND DML_INCLUDE_LIST ${zlib_INCLUDE_DIR})
 list(APPEND DML_INCLUDE_LIST ${PROTOBUF_INCLUDE_DIRS})
 list(APPEND DML_INCLUDE_LIST ${GRPC_INCLUDE_DIRS})
+list(APPEND DML_INCLUDE_LIST ${EIGEN_INSTALL})
 
 
 set(proto_gen_folder "${PROJECT_BINARY_DIR}/src/agent/proto")
