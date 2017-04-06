@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-#include "device_mgr.h"
+#include "runtime/device_mgr.h"
 
 DeviceManager::DeviceManager(const std::string filename) {
   std::ifstream device_file(filename.c_str(), std::ifstream::in);

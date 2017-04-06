@@ -3,9 +3,9 @@
 #include <string>
 #include <vector>
 
-#include "json.hpp"
-#include "rpc/protos/node_def.pb.h"
-#include "graph_mgr.h"
+#include "third_party/json/json.hpp"
+#include "node_def.pb.h"
+#include "runtime/graph_mgr.h"
 
 using dml::NodeDef;
 using json = nlohmann::json;

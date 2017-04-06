@@ -1,5 +1,5 @@
-#include "node.h"
-#include "../util/util.h"
+#include "graph/node.h"
+#include "util/util.h"
 
 #include <iostream>
 #include <string>
