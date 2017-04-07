@@ -50,7 +50,11 @@ add_definitions(-DHAS_EIGEN)
 #    INSTALL_DIR ${EIGEN_INSTALL})
 #add_definitions(-DHAS_EIGEN)
 
+find_package(BLAS REQUIRED)
+find_package(LAPACK REQUIRED)
+
 macro(requires_eigen NAME)
   target_link_libraries(${NAME} ${BLAS_LIBRARIES})
+  target_link_libraries(${NAME} ${LAPACK_LIBRARIES})
   add_dependencies(${NAME} eigen)
 endmacro(requires_eigen)
