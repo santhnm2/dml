@@ -9,6 +9,6 @@ MNIST data: http://yann.lecun.com/exdb/mnist/
 ```
 cmake .
 make
-./build/worker examples/test/testdevicespec localhost:50051
-./build/master examples/test/testdevicespec examples/test/testgraphspec.json
+./build/worker examples/test/testdevicelist localhost:50051
+./build/master examples/test/testdevicelist examples/test/testgraphspec.json
 ```
