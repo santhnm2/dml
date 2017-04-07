@@ -28,10 +28,14 @@ include(protobuf)
 include(grpc)
 include(eigen)
 
+#find_package(ZLIB REQUIRED)
+
 set(dml_EXTERNAL_LIBRARIES
 #		${zlib_STATIC_LIBRARIES}
 		${protobuf_STATIC_LIBRARIES}
 		${grpc_STATIC_LIBRARIES}
+		${ZLIB_LIBRARIES}
+		${CARES_LIBRARIES}
 		)
 set(dml_EXTERNAL_DEPENDENCIES
 #		zlib_copy_headers_to_destination
@@ -50,10 +54,11 @@ list(APPEND DML_INCLUDE_LIST "${PROJECT_SOURCE_DIR}/include")
 
 #list(APPEND DML_INCLUDE_LIST "${PROJECT_SOURCE_DIR}/include/third_party/json")
 
-#list(APPEND DML_INCLUDE_LIST ${zlib_INCLUDE_DIR})
+list(APPEND DML_INCLUDE_LIST ${zlib_INCLUDE_DIR})
 list(APPEND DML_INCLUDE_LIST ${PROTOBUF_INCLUDE_DIRS})
 list(APPEND DML_INCLUDE_LIST ${GRPC_INCLUDE_DIRS})
-list(APPEND DML_INCLUDE_LIST ${EIGEN_INSTALL})
+#list(APPEND DML_INCLUDE_LIST ${EIGEN_INSTALL})
+list(APPEND DML_INCLUDE_LIST ${EIGEN_INCLUDE_DIRS})
 
 
 set(proto_gen_folder "${PROJECT_BINARY_DIR}/src/agent/proto")
@@ -64,7 +69,7 @@ file(GLOB grpc_proto_files "src/agent/proto/*_grpc.proto")
 dml_protobuf_grpc_generate_cpp(${proto_gen_folder} grpc_proto_srcs grpc_proto_hdrs "${PROJECT_SOURCE_DIR}" "src/agent/proto" ${grpc_proto_files})
 
 
-list(APPEND DML_INCLUDE_LIST "${PROJECT_BINARY_DIR}/include/")
+#list(APPEND DML_INCLUDE_LIST "${PROJECT_BINARY_DIR}/include/")
 list(APPEND DML_INCLUDE_LIST "${proto_gen_folder}")
 
 set(SOURCE "")

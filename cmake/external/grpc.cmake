@@ -1,9 +1,9 @@
 include (ExternalProject)
 
 set(GRPC_INCLUDE_DIRS ${CMAKE_CURRENT_BINARY_DIR}/grpc/src/grpc/include)
-set(GRPC_URL https://github.com/grpc/grpc.git)
+set(GRPC_URL https://github.com/xcgoner/grpc.git)
 set(GRPC_BUILD ${CMAKE_CURRENT_BINARY_DIR}/grpc/src/grpc)
-set(GRPC_TAG e2cfe9df79c4eda4e376222df064c4c65e616352)
+#set(GRPC_TAG e2cfe9df79c4eda4e376222df064c4c65e616352)
 
 if(WIN32)
   set(grpc_STATIC_LIBRARIES
@@ -18,6 +18,14 @@ else()
   set(grpc_cpp_plugin_executable ${CMAKE_CURRENT_BINARY_DIR}/grpc/src/grpc/grpc_cpp_plugin)
 endif()
 
+# ZLIB
+set(ZLIB_LIBRARIES ${CMAKE_CURRENT_BINARY_DIR}/grpc/src/grpc/third_party/zlib/libz.a)
+set(ZLIB_INCLUDE_DIR ${CMAKE_CURRENT_BINARY_DIR}/grpc/src/grpc/third_party/zlib)
+
+# CARES
+set(CARES_LIBRARIES ${CMAKE_CURRENT_BINARY_DIR}/grpc/src/grpc/third_party/cares/libcares.a)
+set(CARES_INCLUDE_DIR ${CMAKE_CURRENT_BINARY_DIR}/grpc/src/grpc/third_party/cares/cares)
+
 ExternalProject_Add(grpc
     PREFIX grpc
     DEPENDS protobuf
@@ -25,7 +33,7 @@ ExternalProject_Add(grpc
     GIT_TAG ${GRPC_TAG}
     DOWNLOAD_DIR "${DOWNLOAD_LOCATION}"
     BUILD_IN_SOURCE 1
-    PATCH_COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/cmake/patches/grpc/CMakeLists.txt ${GRPC_BUILD}
+#    PATCH_COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_CURRENT_SOURCE_DIR}/cmake/patches/grpc/CMakeLists.txt ${GRPC_BUILD}
     INSTALL_COMMAND ""
     CMAKE_CACHE_ARGS
     -DCMAKE_BUILD_TYPE:STRING=Release
