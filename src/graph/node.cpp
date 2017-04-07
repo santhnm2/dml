@@ -61,30 +61,6 @@ Device Node::device() const {
   return device_;
 }
 
-MatrixXd Node::getInput() {
-  return input_;
-}
-
-void Node::setInput(MatrixXd input) {
-  input_ = input;
-}
-
-MatrixXd Node::getWeight() {
-  return weight_;
-}
-
-void Node::setWeight(MatrixXd weight) {
-  weight_ = weight;
-} 
-
-MatrixXd Node::getOutput() {
-  return output_;
-}
-
-void Node::setOutput(MatrixXd output) {
-  output_ = output;
-}
-
 void Node::addInEdge(Node* n) {
   inputs_.push_back(n);
 }

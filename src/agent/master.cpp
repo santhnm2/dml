@@ -32,7 +32,13 @@ int main(int argc, char* argv[]) {
   std::vector<NodeDef> graphDef = graph_mgr.graphDef();
   int iterations = graph_mgr.iterations();
 
+  std::cout << iterations << std::endl;
+  std::cout << device_mgr.devices().size() << std::endl;
+
   for (auto it : device_mgr.devices()) {
+
+    std::cout << it.name() << std::endl;
+
     MasterClient mc(grpc::CreateChannel(
       it.addr(), grpc::InsecureChannelCredentials()));
     std::string response = mc.Init(graphDef, iterations);

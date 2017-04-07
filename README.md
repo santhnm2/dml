@@ -14,7 +14,7 @@ To run the code:
 First, download the training dataset from
 http://yann.lecun.com/exdb/mnist/
 ```
-/build/worker examples/test/testdevicespec localhost:50051
+./build/worker examples/test/testdevicespec localhost:50051
 ./build/master examples/test/testdevicespec examples/test/testgraphspec.json
 ```
 

@@ -15,14 +15,14 @@ using json = nlohmann::json;
 class ApplyWeight {
  public:
   static void compute(Node* n, bool fwd) {
-  	json args = json::parse(n->args());
+    json args = json::parse(n->args());
     if (fwd) {
-  		if (n->fwd_data.rows() == 0) {
-    		// Initialize weight
+      if (n->fwd_data.rows() == 0) {
+        // Initialize weight
         int rows = args["shape"][0];
         int cols = args["shape"][1];
 
-    		n->fwd_data = MatrixXd::Zero(rows, cols);
+        n->fwd_data = MatrixXd::Zero(rows, cols);
 
         for (int i = 0; i < n->fwd_data.rows(); i++) {
           for (int j = 0; j < n->fwd_data.cols(); j++) {
@@ -30,7 +30,7 @@ class ApplyWeight {
                                 static_cast <float> (RAND_MAX) - 1;
           }
         }
-    	}
+      }
       n->outputs()[0]->fwd_input = n->fwd_input * n->fwd_data;
     } else {
       n->bwd = n->outputs()[0]->bwd * n->fwd_data.transpose();
