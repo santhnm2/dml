@@ -22,14 +22,9 @@ class ApplyWeight {
         int rows = args["shape"][0];
         int cols = args["shape"][1];
 
-        n->fwd_data = MatrixXd::Zero(rows, cols);
-
-        for (int i = 0; i < n->fwd_data.rows(); i++) {
-          for (int j = 0; j < n->fwd_data.cols(); j++) {
-            n->fwd_data(i, j) = 2 * static_cast <float> (rand()) /
-                                static_cast <float> (RAND_MAX) - 1;
-          }
-        }
+        // random initialization
+        // random real number in the range [-1, +1]
+        n->fwd_data = MatrixXd::Random(rows, cols);
       }
       n->outputs()[0]->fwd_input = n->fwd_input * n->fwd_data;
     } else {
